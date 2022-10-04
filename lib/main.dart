@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atividade2/View/conversas.dart';
 import './Apresentacao1.dart';
 import "model/contato.dart";
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'WhatsApp 2',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -21,20 +22,17 @@ class MyApp extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            title: const Text("WhatsApp 2"),
             bottom: const TabBar(tabs: [
-              Tab(text: "Integrante 1"),
-              Tab(text: "Integrante 2"),
-              Tab(text: "subsistema")
+              Tab(text: "Conversa"),
+              Tab(text: "Contatos"),
+              Tab(text: "depois eu excluo isso",)
+             
             ]),
-            title: const Text("Atividade 2"),
           ),
           body: TabBarView(children: [
-            presentationCard(imageLink: "https://media-exp1.licdn.com/dms/image/C4D03AQFh7uSwig7Waw/profile-displayphoto-shrink_200_200/0/1662439561558?e=1668643200&v=beta&t=5paimSdr8OIVXv0ytCdcgHrFyuTb7G_vWc8BY_2YYOo",
-            nome: "Davi Pereira\nBergamin",
-            desc:"Aluno de análise e desenvolvimento\nde sistemas na Unicamp"),
-            presentationCard(imageLink: "https://seeklogo.com/images/A/android-messages-logo-020799A598-seeklogo.com.png",
-            nome:"Felipe Araujo\nSantos Pinto",
-            desc:"Aluno de análise e desenvolvimento\nde sistemas na Unicamp"),
+            TelaConversas(),
+            TelaConversas(),
             NewContactScreen(),
           ]),
         ),
@@ -43,43 +41,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            keyboardType: TextInputType.text,
-            validator: (String? inValue) {
-              if (inValue != null) {
-                if (inValue.isEmpty) {
-                  return "Insira um nome de usuário";
-                }
-              }
-              return null;
-            },
-            onSaved: (String? inValue) {
-              print(inValue);
-            },
-          ),
-          ElevatedButton(
-            child: const Text("Log In!"),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-              }
-            },
-          )
-        ],
-      ),
-    );
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class NewContactScreen extends StatelessWidget {
   NewContactScreen({Key? key}) : super(key: key);
