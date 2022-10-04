@@ -5,9 +5,7 @@ class Contato {
   Contato(this.apelido, this.numero);
 
   @override
-  String toString()
-  {
+  String toString() {
     return "Contato [$apelido,$numero]";
   }
 }
-
