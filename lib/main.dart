@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/View/conversas.dart';
-import './Apresentacao1.dart';
-import "model/contato.dart";
+import 'View/contato_tela.dart';
+import "View/conversa_tela.dart";
+import 'model/contato.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -27,12 +28,11 @@ class MyApp extends StatelessWidget {
               Tab(text: "Conversa"),
               Tab(text: "Contatos"),
               Tab(text: "depois eu excluo isso",)
-             
             ]),
           ),
           body: TabBarView(children: [
             TelaConversas(),
-            TelaConversas(),
+            TelaContatos(),
             NewContactScreen(),
           ]),
         ),
