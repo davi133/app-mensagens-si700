@@ -13,37 +13,27 @@ class ChatScreen extends StatelessWidget {
       Mensagem(User("Felipe", 1002), User("davi", 1001), "opaa"),
     ];
 
-    /*return Row(
-      children:<Widget> [
-        Expanded(
-          child: ListView.builder(
-            itemCount: mensagens.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Text("mensagem");
-            },
-          ),
-        ),
-      ],
-    );*/
-
     return Container(
       margin: const EdgeInsets.all(12.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children:<Widget>[
-          Expanded(
-          child: ListView.builder(
-            itemCount: mensagens.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Text("${mensagens[index]}");
-            },
-          ),
-        ),
-          const TextField(
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              labelText: 'Número',
-            ),
+        children: [
+          MessageList(mensagens),
+          Row(
+            children: [
+              const Expanded(
+                child: TextField(
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    labelText: 'Escreva uma mensagem',
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Icon(Icons.arrow_forward),
+              )
+            ],
           ),
         ],
       ),
@@ -51,9 +41,31 @@ class ChatScreen extends StatelessWidget {
   }
 }
 
-Widget messagesList() => ListView.builder(
-      itemCount: 0,
-      itemBuilder: (BuildContext context, int index) {
-        return Text("mensagem");
-      },
+class MessageList extends StatelessWidget {
+  MessageList(this.mensagens, {super.key});
+  List<Mensagem> mensagens;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: mensagens.length,
+        itemBuilder: (BuildContext context, int index) {
+          return MessageTile(mensagens[index]);
+        },
+      ),
     );
+  }
+}
+
+class MessageTile extends StatelessWidget {
+  const MessageTile(this.msg,{super.key});
+  final Mensagem msg;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text("$msg"),
+    );
+  }
+}
