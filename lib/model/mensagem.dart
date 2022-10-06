@@ -16,7 +16,7 @@ class Mensagem {
   String toString()
   {
     String txt = "From: $from\n";
-    txt       += "To: $to";
+    txt       += "To: $to\n";
     txt       += "Sent: $sent\n";
     txt       += texto;
 
