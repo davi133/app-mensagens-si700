@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'View/contato_tela.dart';
 import "View/conversa_tela.dart";
+import 'View/Home.dart';
 import 'model/contato.dart';
 
 
@@ -19,24 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("WhatsApp 2"),
-            bottom: const TabBar(tabs: [
-              Tab(text: "Conversa"),
-              Tab(text: "Contatos"),
-              Tab(text: "depois eu excluo isso",)
-            ]),
-          ),
-          body: TabBarView(children: [
-            TelaConversas(),
-            TelaContatos(),
-            NewContactScreen(),
-          ]),
-        ),
-      ),
+      home: Home()
     );
   }
 }

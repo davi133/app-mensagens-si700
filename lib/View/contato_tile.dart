@@ -14,7 +14,7 @@ class ContatoTile extends StatelessWidget {
 
     return ListTile(
       title: Text(cont.apelido),
-      subtitle:const Text("email??? quem sabe"),
+      subtitle: Text("#${cont.numero}"),
 
     );
   }
