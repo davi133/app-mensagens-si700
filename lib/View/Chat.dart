@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../model/user.dart';
 import 'conversa_tile.dart';
 import '../model/mensagem.dart';
+import '../model/user.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
@@ -17,25 +18,7 @@ class ChatScreen extends StatelessWidget {
       margin: const EdgeInsets.all(12.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          MessageList(mensagens),
-          Row(
-            children: [
-              const Expanded(
-                child: TextField(
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    labelText: 'Escreva uma mensagem',
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Icon(Icons.arrow_forward),
-              )
-            ],
-          ),
-        ],
+        children: [MessageList(mensagens), const ChatBottom()],
       ),
     );
   }
@@ -44,6 +27,7 @@ class ChatScreen extends StatelessWidget {
 class MessageList extends StatelessWidget {
   MessageList(this.mensagens, {super.key});
   List<Mensagem> mensagens;
+  final User me = User("davi", 1001);
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +43,77 @@ class MessageList extends StatelessWidget {
 }
 
 class MessageTile extends StatelessWidget {
-  const MessageTile(this.msg,{super.key});
+  MessageTile(this.msg, {super.key});
   final Mensagem msg;
+  final User me = User("davi", 1001);//Isso precisa ser refatorado depois, 
+                                     //mas precisa de um jeito do tile saber
+                                     //em qual lado da tela colocar a mensagem
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: msg.from.numero == me.numero
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              color:
+                  msg.from.numero == me.numero ? Colors.blue : Colors.blue[100],
+              borderRadius: const BorderRadius.all(Radius.circular(6))),
+          padding: const EdgeInsets.all(5.0),
+          margin: const EdgeInsets.all(5.0),
+          child: Text("$msg"),
+        ),
+      ],
+    );
+  }
+}
+
+class ChatBottom extends StatefulWidget {
+  const ChatBottom({super.key});
+
+  @override
+  State<ChatBottom> createState() => _ChatBottomState();
+}
+
+class _ChatBottomState extends State<ChatBottom> {
+  String message = "";
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("$msg"),
+    return SizedBox(
+      height: 45,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                labelText: 'Escreva uma mensagem',
+                filled: true,
+                fillColor: Colors.grey[100],
+              ),
+              onChanged: (value) => {message = value},
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          SizedBox(
+            height: 45,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
+                
+              ))),
+              onPressed: () {},
+              child: const Icon(Icons.arrow_forward),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
