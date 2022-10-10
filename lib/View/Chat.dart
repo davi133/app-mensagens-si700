@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../model/user.dart';
-import 'conversa_tile.dart';
+
 import '../model/mensagem.dart';
-import '../model/user.dart';
+
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key});
+  ChatScreen(this.other, {super.key});
+  User other = User("Felipe", 1002);
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +15,14 @@ class ChatScreen extends StatelessWidget {
       Mensagem(User("Felipe", 1002), User("davi", 1001), "opaa"),
     ];
 
-    return Container(
-      margin: const EdgeInsets.all(12.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [MessageList(mensagens), const ChatBottom()],
+    return Scaffold(
+      appBar: AppBar(title: Text(other.nome)),
+      body: Container(
+        margin: const EdgeInsets.all(12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [MessageList(mensagens), const ChatBottom()],
+        ),
       ),
     );
   }
@@ -62,7 +66,7 @@ class MessageTile extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(6))),
           padding: const EdgeInsets.all(5.0),
           margin: const EdgeInsets.all(5.0),
-          child: Text("$msg"),
+          child: Text(msg.texto),
         ),
       ],
     );

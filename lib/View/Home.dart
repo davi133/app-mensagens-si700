@@ -12,20 +12,18 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             title: const Text("WhatsApp 2"),
             bottom: const TabBar(tabs: [
               Tab(text: "Conversa"),
               Tab(text: "Contatos"),
-              Tab(text: "chat"),
             ]),
           ),
           body: TabBarView(children: [
             TelaConversas(),
             TelaContatos(),
-            ChatScreen(),
           ]),
         ),
       );
