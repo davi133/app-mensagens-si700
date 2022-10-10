@@ -15,6 +15,15 @@ class ContatoTile extends StatelessWidget {
     return ListTile(
       title: Text(cont.apelido),
       subtitle: Text("#${cont.numero}"),
+      trailing: Container(
+        width: 80,
+        child: Row(
+          children:<Widget> [
+            IconButton(onPressed: (){}, icon: const Icon(Icons.edit)),
+            IconButton(onPressed: (){}, icon: const Icon(Icons.delete))
+          ],
+        ),
+      ),
 
     );
   }
