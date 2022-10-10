@@ -8,7 +8,7 @@ class TelaConversas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<User> users = [User("davi", 1001),User("Felpe", 1002)];
+    List<User> users = [User("davi", 1001),User("Felipe", 1002)];
 
 
     return ListView.builder(
