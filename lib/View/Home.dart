@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'contato_tela.dart';
 import "conversa_tela.dart";
-import 'Chat.dart';
-import '../model/user.dart';
-
 
 
 class Home extends StatelessWidget {
@@ -12,20 +9,20 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("WhatsApp 2"),
-            bottom: const TabBar(tabs: [
-              Tab(text: "Conversa"),
-              Tab(text: "Contatos"),
-            ]),
-          ),
-          body: TabBarView(children: [
-            TelaConversas(),
-            TelaContatos(),
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("WhatsApp 2"),
+          bottom: const TabBar(tabs: [
+            Tab(text: "Conversa"),
+            Tab(text: "Contatos"),
           ]),
         ),
-      );
+        body: TabBarView(children: [
+          TelaConversas(),
+          TelaContatos(),
+        ]),
+      ),
+    );
   }
 }
