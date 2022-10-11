@@ -8,4 +8,8 @@ class Contato {
   String toString() {
     return "Contato [$apelido,$numero]";
   }
+
+  Contato copy() {
+    return Contato(apelido, numero);
+  }
 }

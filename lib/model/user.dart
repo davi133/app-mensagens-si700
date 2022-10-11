@@ -14,6 +14,10 @@ class User {
     return "$nome[#$numero]";
   }
 
+  User copy()
+  {
+    return User(nome, numero);
+  }
 
 
 
