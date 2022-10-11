@@ -24,12 +24,11 @@ class _TelaContatosState extends State<TelaContatos> {
             child: ListView.builder(
               itemCount: contatos.length,
               itemBuilder: (BuildContext context, int index) {
-                return ContatoTile(contatos.elementAt(index));
+                return ContatoTile(contatos.elementAt(index), onChanged: (){setState(() {});},);
               },
             ),
-          ),
+          ),///FROM HERE AND BELOW IS FOR THE FLOATING BUTTON ####################################
           SizedBox(
-            ///FROM HERE AND BELOW IS FOR THE FLOATING BUTTON
             height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
