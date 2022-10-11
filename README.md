@@ -1,1 +1,1 @@
-projeto em flutter de aplicativo demensagens
+projeto em flutter de aplicativo de mensagens
