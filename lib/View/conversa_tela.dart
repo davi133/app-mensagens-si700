@@ -23,13 +23,23 @@ class TelaConversas extends StatelessWidget {
   }
 }
 
-class ConversaTile extends StatelessWidget {
+class ConversaTile extends StatefulWidget {
 
-  const ConversaTile(this.chat,{super.key, this.onPressed=(pressedDefault)});
+  const ConversaTile(this.chat,{super.key});
   final Conversa chat;
-  final Function onPressed;
+  //final Function onPressed;
 
+  @override
+  State<ConversaTile> createState() => _ConversaTileState();
+}
 
+class _ConversaTileState extends State<ConversaTile> {
+
+  void reloadChatTile()
+  {
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +47,13 @@ class ConversaTile extends StatelessWidget {
     return GestureDetector(
       onTap: (){
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext ctx){return ChatScreen(chat.outro);})
+          MaterialPageRoute(builder: (BuildContext ctx){return ChatScreen(widget.chat.outro, onNewMessage: reloadChatTile,);})
         );
 
       },
       child: ListTile(
-        title: Text(chat.outro.nome),
-        subtitle:Text(chat.mensagens.last.texto),
+        title: Text(widget.chat.outro.nome),
+        subtitle:Text(widget.chat.mensagens.last.texto),
 
       ),
     );

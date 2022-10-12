@@ -5,15 +5,28 @@ import '../model/Conversa.dart';
 import '../Dados/chatList.dart';
 import '../model/mensagem.dart';
 
+void defaultFunction()
+{
+
+}
+
 class ChatScreen extends StatefulWidget {
-  ChatScreen(this.other, {super.key});
+  ChatScreen(this.other, {super.key, this.onNewMessage=defaultFunction});
   User other = User("Felipe", 1002);
+  final Function onNewMessage;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+   void updateChatScreen()
+  {
+    widget.onNewMessage();
+    setState(() {
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Conversa? convNull = getChatByOthersNumber(widget.other.numero);
@@ -30,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             MessageList(conv),
-            ChatBottom(conv, onSend: (){setState(() {});},),
+            ChatBottom(conv, onSend: updateChatScreen,),
           ],
         ),
       ),
