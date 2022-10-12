@@ -8,8 +8,8 @@ import '../model/mensagem.dart';
 void defaultFunction() {}
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen(this.other, {super.key, this.onNewMessage = defaultFunction});
-  User other = User("Felipe", 1002);
+  const ChatScreen(this.other, {super.key, this.onNewMessage = defaultFunction});
+  final User other;
   final Function onNewMessage;
 
   @override
@@ -38,11 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             MessageList(conv),
-            ChatBottom(
-              conv,
-              widget.other,
-              onSend: updateChatScreen,
-            ),
+            ChatBottom(conv, widget.other, onSend: updateChatScreen),
           ],
         ),
       ),
@@ -51,9 +47,8 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessageList extends StatelessWidget {
-  MessageList(this.conv, {super.key});
-  Conversa conv;
-  final User me = User("davi", 1001);
+  const MessageList(this.conv, {super.key});
+  final Conversa conv;
 
   @override
   Widget build(BuildContext context) {
@@ -69,22 +64,20 @@ class MessageList extends StatelessWidget {
 }
 
 class MessageTile extends StatelessWidget {
-  MessageTile(this.msg, {super.key});
+  const MessageTile(this.msg, {super.key});
   final Mensagem msg;
-  final User me = User("davi", 1001); //Isso precisa ser refatorado depois,
-  //mas precisa de um jeito do tile saber
-  //em qual lado da tela colocar a mensagem
+ 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: msg.from.numero == me.numero
+      mainAxisAlignment: msg.from.numero == CURRENT_USER.numero
           ? MainAxisAlignment.end
           : MainAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
               color:
-                  msg.from.numero == me.numero ? Colors.blue : Colors.blue[100],
+                  msg.from.numero == CURRENT_USER.numero ? Colors.blue : Colors.blue[100],
               borderRadius: const BorderRadius.all(Radius.circular(6))),
           padding: const EdgeInsets.all(5.0),
           margin: const EdgeInsets.all(5.0),
@@ -96,13 +89,13 @@ class MessageTile extends StatelessWidget {
 }
 
 class ChatBottom extends StatefulWidget {
-  ChatBottom(
+  const ChatBottom(
     this.conv,
     this.outro, {
     super.key,
     required this.onSend,
   });
-  Conversa conv;
+  final Conversa conv;
   final Function onSend;
   final User outro;
   @override
@@ -131,9 +124,7 @@ class _ChatBottomState extends State<ChatBottom> {
               onChanged: (value) => {message = value},
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          const SizedBox(width: 20),
           SizedBox(
             height: 45,
             child: ElevatedButton(
@@ -145,8 +136,10 @@ class _ChatBottomState extends State<ChatBottom> {
                 ),
               ),
               onPressed: () {
-                //SEND MESSAGE ======================================================================
-                if (!newMsgController.text.trim().isEmpty) {
+                //SENDING MESSAGE ======================================================================
+                if (newMsgController.text.trim().isNotEmpty) {
+                  //
+                  Conversa convToUse = widget.conv;
                   //CHECANDO SE CONVERSA REALMENTE EXISTE ====================
                   Conversa? conversa =
                       getChatByOthersNumber(widget.outro.numero);
@@ -154,14 +147,14 @@ class _ChatBottomState extends State<ChatBottom> {
                     chatList.add(Conversa(CURRENT_USER, widget.outro));
                     Conversa? aux = getChatByOthersNumber(widget.outro.numero);
                     if (aux != null) {
-                      widget.conv = aux;
+                      convToUse = aux;
                     }
-                  }//aqui já é garantido que existe uma conversa
+                  } //aqui já é garantido que existe uma conversa
 
                   User other = widget.conv.outro;
                   Mensagem msg =
                       Mensagem(other, CURRENT_USER, newMsgController.text);
-                  widget.conv.mensagens.add(msg);
+                  convToUse.mensagens.add(msg);
                   widget.onSend();
                   newMsgController.text = "";
                 }
