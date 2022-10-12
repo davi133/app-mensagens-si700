@@ -43,7 +43,13 @@ class _ConversaTileState extends State<ConversaTile> {
 
   @override
   Widget build(BuildContext context) {
-     
+    String previewText = "";
+    if (widget.chat.mensagens.isNotEmpty)
+    {
+      previewText =widget.chat.mensagens.last.texto;
+    }
+
+
     return GestureDetector(
       onTap: (){
         Navigator.of(context).push(
@@ -53,7 +59,7 @@ class _ConversaTileState extends State<ConversaTile> {
       },
       child: ListTile(
         title: Text(widget.chat.outro.nome),
-        subtitle:Text(widget.chat.mensagens.last.texto),
+        subtitle:Text(previewText),
 
       ),
     );
