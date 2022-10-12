@@ -18,7 +18,7 @@ class Mensagem {
     String txt = "From: $from\n";
     txt       += "To: $to\n";
     txt       += "Sent: $sent\n";
-    txt       += texto;
+    txt       += "$texto \n";
 
     return txt;
    
