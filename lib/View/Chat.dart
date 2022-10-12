@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atividade2/Dados/contactList.dart';
 import 'package:flutter_atividade2/Dados/global.dart';
+import 'package:flutter_atividade2/model/contato.dart';
 import '../model/user.dart';
 import '../model/Conversa.dart';
 import '../Dados/chatList.dart';
@@ -8,7 +10,8 @@ import '../model/mensagem.dart';
 void defaultFunction() {}
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen(this.other, {super.key, this.onNewMessage = defaultFunction});
+  const ChatScreen(this.other,
+      {super.key, this.onNewMessage = defaultFunction});
   final User other;
   final Function onNewMessage;
 
@@ -29,10 +32,32 @@ class _ChatScreenState extends State<ChatScreen> {
     if (convNull != null) {
       conv = convNull;
     }
-    String nome = conv.outro.numero != -1?conv.outro.nome: widget.other.nome;
+    String nome = conv.outro.numero != -1 ? conv.outro.nome : widget.other.nome;
 
     return Scaffold(
-      appBar: AppBar(title: Text(nome), elevation: 0,),
+      appBar: AppBar(
+        title: Text(nome),
+        elevation: 0,
+        actions: [
+          //IconButton(onPressed: (){Navigator.of(context).pop();}, icon:const Icon(Icons.more_vert))
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              const PopupMenuItem<int>(value: 0, child: Text("Adicionar contato")),
+            ],
+            onSelected: (value) {
+              switch (value) {
+                case 0:
+                  Contato? c = getByNumber(widget.other.numero);
+                  if (c == null)
+                  {
+                    contactList.add(Contato(widget.other.nome, widget.other.numero));
+                  }
+                  break;
+              }
+            },
+          )
+        ],
+      ),
       body: Container(
         margin: const EdgeInsets.all(12.0),
         child: Column(
@@ -67,7 +92,7 @@ class MessageList extends StatelessWidget {
 class MessageTile extends StatelessWidget {
   const MessageTile(this.msg, {super.key});
   final Mensagem msg;
- 
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -77,8 +102,9 @@ class MessageTile extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-              color:
-                  msg.from.numero == CURRENT_USER.numero ? Colors.blue : Colors.blue[100],
+              color: msg.from.numero == CURRENT_USER.numero
+                  ? Colors.blue
+                  : Colors.blue[100],
               borderRadius: const BorderRadius.all(Radius.circular(6))),
           padding: const EdgeInsets.all(5.0),
           margin: const EdgeInsets.all(5.0),
