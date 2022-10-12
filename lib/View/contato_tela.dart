@@ -66,7 +66,7 @@ class NewContactScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("novo contato")),
+      appBar: AppBar(title: const Text("novo contato"),elevation: 0,),
       body: Container(
         margin: const EdgeInsets.all(15.0),
         padding: const EdgeInsets.all(3.0),

@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.other.nome)),
+      appBar: AppBar(title: Text(widget.other.nome), elevation: 0,),
       body: Container(
         margin: const EdgeInsets.all(12.0),
         child: Column(
