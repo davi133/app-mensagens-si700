@@ -5,6 +5,7 @@ import 'package:flutter_atividade2/View/contato_tela.dart';
 import '../model/user.dart';
 import '../model/contato.dart';
 import "../Dados/contactList.dart";
+import 'Chat.dart';
 
 class ContatoTile extends StatelessWidget {
   const ContatoTile(this.cont, {super.key, this.onChanged = (pressedDefault)});
@@ -25,11 +26,17 @@ class ContatoTile extends StatelessWidget {
               );
             });
       },
+      //BOTÃO DE CONVERSAR COM O CONTATO =============================================================
       child: ListTile(
         title: Text(cont.apelido),
         subtitle: Text("#${cont.numero}"),
         trailing: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (BuildContext ctx) {
+              return ChatScreen(User(cont.apelido, cont.numero));
+            }));
+          },
           icon: const Icon(Icons.chat),
           color: Colors.blue,
         ),
@@ -55,7 +62,14 @@ class ContactOptions extends StatelessWidget {
             color: Colors.blue,
           ),
           title: const Text("Editar"),
-          onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (_){return EditContato(cont, onFinish: onChanged,);}));},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+              return EditContato(
+                cont,
+                onFinish: onChanged,
+              );
+            }));
+          },
         ),
         //BOTÃO DE DELETAR ###################################
         ListTile(
@@ -98,13 +112,12 @@ class ContactOptions extends StatelessWidget {
 }
 
 class EditContato extends StatelessWidget {
-  EditContato(this.cont,{Key? key, this.onFinish = (pressedDefault)})
+  EditContato(this.cont, {Key? key, this.onFinish = (pressedDefault)})
       : super(key: key);
   final Function onFinish;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Contato aux = Contato("", 1);
   Contato cont;
-
 
   @override
   Widget build(BuildContext context) {
@@ -186,8 +199,6 @@ class EditContato extends StatelessWidget {
     );
   }
 }
-
-
 
 void pressedDefault() {
   return;
