@@ -22,6 +22,11 @@ class Conversa
     return mensagens[index];
   }
 
+  static Conversa conversaInvalida()
+  {
+    return Conversa(User("null",-1), User("null",-1));
+  }
+
   String toString()
   {
     //print("to string:============================================= ");

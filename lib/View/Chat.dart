@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../model/user.dart';
-
+import '../model/Conversa.dart';
+import '../Dados/chatList.dart';
 import '../model/mensagem.dart';
-
 
 class ChatScreen extends StatelessWidget {
   ChatScreen(this.other, {super.key});
@@ -10,10 +10,11 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Mensagem> mensagens = [
-      Mensagem(User("davi", 1001), User("Felipe", 1002), "olá"),
-      Mensagem(User("Felipe", 1002), User("davi", 1001), "opaa"),
-    ];
+    Conversa? convNull = getChatByOthersNumber(other.numero);
+    Conversa conv = Conversa.conversaInvalida();
+    if (convNull != null) {
+      conv = convNull;
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(other.nome)),
@@ -21,7 +22,7 @@ class ChatScreen extends StatelessWidget {
         margin: const EdgeInsets.all(12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [MessageList(mensagens), const ChatBottom()],
+          children: [MessageList(conv), const ChatBottom()],
         ),
       ),
     );
@@ -29,17 +30,17 @@ class ChatScreen extends StatelessWidget {
 }
 
 class MessageList extends StatelessWidget {
-  MessageList(this.mensagens, {super.key});
-  List<Mensagem> mensagens;
+  MessageList(this.conv, {super.key});
+  Conversa conv;
   final User me = User("davi", 1001);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: mensagens.length,
+        itemCount: conv.mensagens.length,
         itemBuilder: (BuildContext context, int index) {
-          return MessageTile(mensagens[index]);
+          return MessageTile(conv.mensagens[index]);
         },
       ),
     );
@@ -49,9 +50,9 @@ class MessageList extends StatelessWidget {
 class MessageTile extends StatelessWidget {
   MessageTile(this.msg, {super.key});
   final Mensagem msg;
-  final User me = User("davi", 1001);//Isso precisa ser refatorado depois, 
-                                     //mas precisa de um jeito do tile saber
-                                     //em qual lado da tela colocar a mensagem
+  final User me = User("davi", 1001); //Isso precisa ser refatorado depois,
+  //mas precisa de um jeito do tile saber
+  //em qual lado da tela colocar a mensagem
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -110,7 +111,6 @@ class _ChatBottomState extends State<ChatBottom> {
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25.0),
-                
               ))),
               onPressed: () {},
               child: const Icon(Icons.arrow_forward),

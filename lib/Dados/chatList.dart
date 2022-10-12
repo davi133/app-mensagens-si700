@@ -32,7 +32,7 @@ void setConversa(Conversa conv)
   chatList.add(conv);
 }
 
-Conversa? getByOthersNumber(int number)
+Conversa? getChatByOthersNumber(int number)
 {
   for(int i =0; i< chatList.length;i++)
   {
@@ -42,4 +42,5 @@ Conversa? getByOthersNumber(int number)
     }
   }
   return null;
+  //return Conversa(User("null",-1), User("null",-1));
 }
