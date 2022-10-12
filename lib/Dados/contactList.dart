@@ -4,7 +4,7 @@ var contactList = [
   Contato("Felipe", 1002),
   Contato("Joao", 1003),
   Contato("Pedro", 1004),
-  Contato("Robson", 1005),
+  //Contato("Robson", 1005),
   Contato("Ulisses", 1010)
 ];
 
