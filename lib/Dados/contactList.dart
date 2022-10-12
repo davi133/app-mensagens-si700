@@ -1,7 +1,8 @@
 import '../model/contato.dart';
 
 var contactList = [
-  Contato("Felipe", 1002),
+  Contato("Felipe Araujo Santos Pinto", 169401),
+  Contato("Davi Pereira Bergamin", 169753),
   Contato("Joao", 1003),
   Contato("Pedro", 1004),
   //Contato("Robson", 1005),

@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: const Text("WhatsApp 2"),
+          title: const Text("UniTalk"),
           bottom: const TabBar(tabs: [
             Tab(text: "Conversas"),
             Tab(text: "Contatos"),

@@ -7,9 +7,9 @@ import '../model/Conversa.dart';
 import 'global.dart';
 
 var chatList = [
-  Conversa(CURRENT_USER, User("Felipe", 1002), mensagens: [
-    Mensagem(CURRENT_USER, User("Felipe", 1002), "ola"),
-    Mensagem(User("Felipe", 1002),CURRENT_USER, "opaa"),
+  Conversa(CURRENT_USER, User("Felipe Araujo Santos Pinto", 169401), mensagens: [
+    Mensagem(CURRENT_USER, User("Felipe",  169401), "ola"),
+    Mensagem(User("Felipe", 169401),CURRENT_USER, "opaa"),
 
   ]),
    Conversa(CURRENT_USER, User("Ulisses", 1010), mensagens: [

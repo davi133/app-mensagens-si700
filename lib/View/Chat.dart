@@ -42,15 +42,28 @@ class _ChatScreenState extends State<ChatScreen> {
           //IconButton(onPressed: (){Navigator.of(context).pop();}, icon:const Icon(Icons.more_vert))
           PopupMenuButton(
             itemBuilder: (context) => [
-              const PopupMenuItem<int>(value: 0, child: Text("Adicionar contato")),
+              const PopupMenuItem<int>(
+                  value: 0, child: Text("Adicionar contato")),
             ],
             onSelected: (value) {
               switch (value) {
                 case 0:
                   Contato? c = getByNumber(widget.other.numero);
-                  if (c == null)
-                  {
-                    contactList.add(Contato(widget.other.nome, widget.other.numero));
+                  if (c == null) {
+                    contactList
+                        .add(Contato(widget.other.nome, widget.other.numero));
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return SimpleDialog(
+                            title: const Text("Contato adicionado"),
+                            children: [
+                              TextButton(onPressed: (){
+                                Navigator.of(context).pop();
+                              }, child: const Text("Ok"))
+                            ],
+                          );
+                        });
                   }
                   break;
               }
