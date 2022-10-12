@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atividade2/Dados/global.dart';
 import '../model/user.dart';
 import '../model/Conversa.dart';
 import '../Dados/chatList.dart';
 import '../model/mensagem.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   ChatScreen(this.other, {super.key});
   User other = User("Felipe", 1002);
 
   @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
   Widget build(BuildContext context) {
-    Conversa? convNull = getChatByOthersNumber(other.numero);
+    Conversa? convNull = getChatByOthersNumber(widget.other.numero);
     Conversa conv = Conversa.conversaInvalida();
     if (convNull != null) {
       conv = convNull;
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(other.nome)),
+      appBar: AppBar(title: Text(widget.other.nome)),
       body: Container(
         margin: const EdgeInsets.all(12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [MessageList(conv), const ChatBottom()],
+          children: [
+            MessageList(conv),
+            ChatBottom(conv, onSend: (){setState(() {});},),
+          ],
         ),
       ),
     );
@@ -75,15 +84,17 @@ class MessageTile extends StatelessWidget {
 }
 
 class ChatBottom extends StatefulWidget {
-  const ChatBottom({super.key});
-
+  const ChatBottom(this.conv,{super.key, required this.onSend});
+  final Conversa conv;
+  final Function onSend;
   @override
   State<ChatBottom> createState() => _ChatBottomState();
 }
 
 class _ChatBottomState extends State<ChatBottom> {
   String message = "";
-
+  final TextEditingController newMsgController = TextEditingController();
+  
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -92,6 +103,7 @@ class _ChatBottomState extends State<ChatBottom> {
         children: [
           Expanded(
             child: TextField(
+              controller: newMsgController,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: 'Escreva uma mensagem',
@@ -108,11 +120,22 @@ class _ChatBottomState extends State<ChatBottom> {
             height: 45,
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
-              ))),
-              onPressed: () {},
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                if (!newMsgController.text.trim().isEmpty) {
+                  User other =widget.conv.outro;
+                  Mensagem msg = Mensagem(other,CURRENT_USER,newMsgController.text);
+                  widget.conv.mensagens.add(msg);
+                  widget.onSend();
+                  newMsgController.text="";
+
+                }
+              },
               child: const Icon(Icons.arrow_forward),
             ),
           )
