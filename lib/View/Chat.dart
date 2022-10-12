@@ -29,9 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
     if (convNull != null) {
       conv = convNull;
     }
+    String nome = conv.outro.numero != -1?conv.outro.nome: widget.other.nome;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.other.nome), elevation: 0,),
+      appBar: AppBar(title: Text(nome), elevation: 0,),
       body: Container(
         margin: const EdgeInsets.all(12.0),
         child: Column(
