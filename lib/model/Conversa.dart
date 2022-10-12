@@ -9,7 +9,13 @@ class Conversa
   User outro;
   List<Mensagem> mensagens = [];
 
-  Conversa(this.owner, this.outro, {this.mensagens =const []});
+  Conversa(this.owner, this.outro, {this.mensagens =const []})
+  {
+    if(mensagens.isEmpty)
+    {
+      mensagens =[];
+    }
+  }
  
 
   void addMensagem(Mensagem toAdd)

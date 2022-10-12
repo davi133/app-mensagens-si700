@@ -5,13 +5,10 @@ import '../model/Conversa.dart';
 import '../Dados/chatList.dart';
 import '../model/mensagem.dart';
 
-void defaultFunction()
-{
-
-}
+void defaultFunction() {}
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen(this.other, {super.key, this.onNewMessage=defaultFunction});
+  ChatScreen(this.other, {super.key, this.onNewMessage = defaultFunction});
   User other = User("Felipe", 1002);
   final Function onNewMessage;
 
@@ -20,11 +17,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-   void updateChatScreen()
-  {
+  void updateChatScreen() {
     widget.onNewMessage();
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -43,7 +38,11 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             MessageList(conv),
-            ChatBottom(conv, onSend: updateChatScreen,),
+            ChatBottom(
+              conv,
+              widget.other,
+              onSend: updateChatScreen,
+            ),
           ],
         ),
       ),
@@ -97,9 +96,15 @@ class MessageTile extends StatelessWidget {
 }
 
 class ChatBottom extends StatefulWidget {
-  const ChatBottom(this.conv,{super.key, required this.onSend});
-  final Conversa conv;
+  ChatBottom(
+    this.conv,
+    this.outro, {
+    super.key,
+    required this.onSend,
+  });
+  Conversa conv;
   final Function onSend;
+  final User outro;
   @override
   State<ChatBottom> createState() => _ChatBottomState();
 }
@@ -107,7 +112,7 @@ class ChatBottom extends StatefulWidget {
 class _ChatBottomState extends State<ChatBottom> {
   String message = "";
   final TextEditingController newMsgController = TextEditingController();
-  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -140,13 +145,25 @@ class _ChatBottomState extends State<ChatBottom> {
                 ),
               ),
               onPressed: () {
+                //SEND MESSAGE ======================================================================
                 if (!newMsgController.text.trim().isEmpty) {
-                  User other =widget.conv.outro;
-                  Mensagem msg = Mensagem(other,CURRENT_USER,newMsgController.text);
+                  //CHECANDO SE CONVERSA REALMENTE EXISTE ====================
+                  Conversa? conversa =
+                      getChatByOthersNumber(widget.outro.numero);
+                  if (conversa == null) {
+                    chatList.add(Conversa(CURRENT_USER, widget.outro));
+                    Conversa? aux = getChatByOthersNumber(widget.outro.numero);
+                    if (aux != null) {
+                      widget.conv = aux;
+                    }
+                  }//aqui já é garantido que existe uma conversa
+
+                  User other = widget.conv.outro;
+                  Mensagem msg =
+                      Mensagem(other, CURRENT_USER, newMsgController.text);
                   widget.conv.mensagens.add(msg);
                   widget.onSend();
-                  newMsgController.text="";
-
+                  newMsgController.text = "";
                 }
               },
               child: const Icon(Icons.arrow_forward),
