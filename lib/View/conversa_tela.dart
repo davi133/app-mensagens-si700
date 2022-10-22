@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
-import '../model/user.dart';
-import 'package:flutter_atividade2/View/Chat.dart';
+import '../View/Chat.dart';
 import '../Dados/chatList.dart';
 import '../model/Conversa.dart';
 

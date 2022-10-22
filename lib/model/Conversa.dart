@@ -1,6 +1,5 @@
-import 'package:flutter_atividade2/model/mensagem.dart';
+import '../model/mensagem.dart';
 
-import 'contato.dart';
 import 'user.dart';
 
 class Conversa

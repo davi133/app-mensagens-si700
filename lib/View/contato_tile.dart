@@ -1,7 +1,4 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/View/contato_tela.dart';
 import '../model/user.dart';
 import '../model/contato.dart';
 import "../Dados/contactList.dart";

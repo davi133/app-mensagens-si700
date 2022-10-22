@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'contato_tela.dart';
 import "conversa_tela.dart";
-import 'login_view.dart';
+
 
 class Home extends StatelessWidget {
   const Home({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/Dados/contactList.dart';
-import 'package:flutter_atividade2/Dados/global.dart';
-import 'package:flutter_atividade2/model/contato.dart';
+import '../Dados/contactList.dart';
+import '../Dados/global.dart';
+import '../model/contato.dart';
 import '../model/user.dart';
 import '../model/Conversa.dart';
 import '../Dados/chatList.dart';

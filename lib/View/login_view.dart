@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/View/Home.dart';
 import 'signin_view.dart';
 import 'Home.dart';
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'View/contato_tela.dart';
-import "View/conversa_tela.dart";
-import 'View/Home.dart';
-import 'model/contato.dart';
+
 import 'View/login_view.dart';
+
 
 void main() {
   runApp(const MyApp());

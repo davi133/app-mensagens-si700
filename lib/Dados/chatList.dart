@@ -1,6 +1,6 @@
-import 'package:flutter_atividade2/Dados/contactList.dart';
 
-import '../model/contato.dart';
+
+
 import '../model/user.dart';
 import '../model/mensagem.dart';
 import '../model/Conversa.dart';
