@@ -23,7 +23,7 @@ class SigninView extends StatelessWidget {
                 children: [
                   //TEXT FIELD ===========================================
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: 'Nome',
                     ),
@@ -35,7 +35,7 @@ class SigninView extends StatelessWidget {
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                     ),
@@ -47,7 +47,7 @@ class SigninView extends StatelessWidget {
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: 'Senha',
                     ),

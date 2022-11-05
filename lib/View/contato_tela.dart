@@ -1,16 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
+import 'package:flutter_atividade2/Blocs/contact_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/contato.dart';
 import 'contato_tile.dart';
 import '../Dados/contactList.dart';
 
-class TelaContatos extends StatefulWidget {
+class TelaContatos extends StatelessWidget {
   const TelaContatos({super.key});
 
   @override
-  State<TelaContatos> createState() => _TelaContatosState();
+  Widget build(BuildContext context) {
+    return BlocBuilder<ContactBloc,ContactState>(
+      bloc: BlocProvider.of<ContactBloc>(context),
+      builder: ((context, state) {
+        if( state is ContactLoaded)
+        {
+          return ListaContatos();
+        }
+        else
+        {
+          return const Text("????");
+        }
+      }));
+  }
 }
 
-class _TelaContatosState extends State<TelaContatos> {
+
+class ListaContatos extends StatefulWidget {
+  const ListaContatos({super.key});
+
+  @override
+  State<ListaContatos> createState() => _ListaContatosState();
+}
+
+class _ListaContatosState extends State<ListaContatos> {
   @override
   Widget build(BuildContext context) {
     List<Contato> contatos = contactList;

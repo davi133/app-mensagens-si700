@@ -1,8 +1,9 @@
 class Contato {
+  int id =0;//id in the local database
   String apelido = "";
-  int numero = 0;
+  int numero = 0;//id of the other user
 
-  Contato(this.apelido, this.numero);
+  Contato(this.apelido, this.numero,{this.id=0});
 
   @override
   String toString() {
