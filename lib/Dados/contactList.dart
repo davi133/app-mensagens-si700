@@ -14,8 +14,16 @@ class ContactDataProvider {
 
   ContactDataProvider._createInstance();
 
-  Future<List<Contato>> getAllContacts() async {
+  Future<List<Contato>> getContacts() async {
+    await Future.delayed(const Duration(seconds: 1));
     return contactList;
+  }
+
+  Future<int> addContato(Contato cont) async
+  {
+    await Future.delayed(const Duration(milliseconds: 500));
+    contactList.add(cont);
+    return 1;
   }
 
   Future<Contato?> getByNumber(int number) async {
@@ -42,6 +50,19 @@ class ContactDataProvider {
     return 1;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var contactList = [
   //done

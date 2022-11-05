@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
         ),
         body: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (ctx)=>ContactBloc(ContactLoaded()))
+            BlocProvider(create: (ctx)=>ContactBloc(ContactFetchING()))
           ],
           child: const TabBarView(children: [
             TelaConversas(),

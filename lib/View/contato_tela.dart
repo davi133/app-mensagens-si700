@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
+import 'package:flutter_atividade2/Blocs/contact_event.dart';
 import 'package:flutter_atividade2/Blocs/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../model/contato.dart';
@@ -11,25 +14,26 @@ class TelaContatos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ContactBloc,ContactState>(
+    return BlocBuilder<ContactBloc, ContactState>(
       bloc: BlocProvider.of<ContactBloc>(context),
       builder: ((context, state) {
-        if( state is ContactLoaded)
-        {
-          return ListaContatos();
+        if (state is ContactFetchING) {
+          ContactBloc cb = BlocProvider.of<ContactBloc>(context);
+          cb.add(ContactFetchEvent());
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is ContactLoaded) {
+          return ListaContatos(contatos: state.lista_de_contatos);
+        } else {
+          return const Center(child: Text("Você não tem amigos"));
         }
-        else
-        {
-          return const Text("????");
-        }
-      }));
+      }),
+    );
   }
 }
 
-
 class ListaContatos extends StatefulWidget {
-  const ListaContatos({super.key});
-
+  const ListaContatos({super.key, this.contatos = const []});
+  final List<Contato> contatos;
   @override
   State<ListaContatos> createState() => _ListaContatosState();
 }
@@ -37,7 +41,7 @@ class ListaContatos extends StatefulWidget {
 class _ListaContatosState extends State<ListaContatos> {
   @override
   Widget build(BuildContext context) {
-    List<Contato> contatos = contactList;
+    //List<Contato> contatos = contactList;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -46,12 +50,19 @@ class _ListaContatosState extends State<ListaContatos> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: contatos.length,
+              itemCount: widget.contatos.length,
               itemBuilder: (BuildContext context, int index) {
-                return ContatoTile(contatos.elementAt(index), onChanged: (){setState(() {});},);
+                return ContatoTile(
+                  widget.contatos.elementAt(index),
+                  onChanged: () {
+                    setState(() {});
+                  },
+                );
               },
             ),
-          ),///FROM HERE AND BELOW IS FOR THE FLOATING BUTTON ####################################
+          ),
+
+          ///FROM HERE AND BELOW IS FOR THE FLOATING BUTTON ####################################
           SizedBox(
             height: 50,
             child: Row(
@@ -61,7 +72,9 @@ class _ListaContatosState extends State<ListaContatos> {
                   onPressed: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (ctx) {
-                      return NewContactScreen(onFinish: () {setState(() {});},);
+                      return NewContactScreen(
+                        BlocProvider.of<ContactBloc>(context)
+                      );
                     }));
                   },
                   tooltip: 'Novo contato',
@@ -81,16 +94,19 @@ void pressedDefault() {
 }
 
 class NewContactScreen extends StatelessWidget {
-  NewContactScreen({Key? key, this.onFinish = (pressedDefault)})
+  NewContactScreen(this.bloc,{Key? key})
       : super(key: key);
-  final Function onFinish;
+  final ContactBloc bloc;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Contato aux = Contato("", 1);
   //Esse widget me da vontade de chorar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("novo contato"),elevation: 0,),
+      appBar: AppBar(
+        title: const Text("novo contato"),
+        elevation: 0,
+      ),
       body: Container(
         margin: const EdgeInsets.all(15.0),
         padding: const EdgeInsets.all(3.0),
@@ -148,12 +164,11 @@ class NewContactScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 child: const Text("Salvar"),
-                onPressed: () {
+                onPressed: ()async{
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    contactList.add(aux);
                     Navigator.of(context).pop();
-                    onFinish();
+                    bloc.add(ContactAddEvent(aux));///////////////////////////////////////////////////////////////////////////
                   }
                 },
               )
