@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import '../View/Chat.dart';
-import '../Dados/chatList.dart';
-import '../model/Conversa.dart';
+import '../../View/ChatsPage/Chat.dart';
+import '../../Dados/chatList.dart';
+import '../../model/Conversa.dart';
 
 
 class TelaConversas extends StatelessWidget {

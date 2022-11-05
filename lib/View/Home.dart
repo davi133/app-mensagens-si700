@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
 import 'package:flutter_atividade2/Blocs/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'contato_tela.dart';
-import "conversa_tela.dart";
+import 'ContactsPage/contato_tela.dart';
+import "ChatsPage/conversa_tela.dart";
 
 class Home extends StatelessWidget {
   const Home({super.key});

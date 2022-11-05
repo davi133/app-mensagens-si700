@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../Dados/contactList.dart';
-import '../Dados/global.dart';
-import '../model/contato.dart';
-import '../model/user.dart';
-import '../model/Conversa.dart';
-import '../Dados/chatList.dart';
-import '../model/mensagem.dart';
+import '../../Dados/contactList.dart';
+import '../../Dados/global.dart';
+import '../../model/contato.dart';
+import '../../model/user.dart';
+import '../../model/Conversa.dart';
+import '../../Dados/chatList.dart';
+import '../../model/mensagem.dart';
 
 void defaultFunction() {}
 
