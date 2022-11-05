@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../model/user.dart';
-import '../model/contato.dart';
-import "../Dados/contactList.dart";
-import 'Chat.dart';
+import '../../model/user.dart';
+import '../../model/contato.dart';
+import "../../Dados/contactList.dart";
+import '../ChatsPage/Chat.dart';
 
 class ContatoTile extends StatelessWidget {
   const ContatoTile(this.cont, {super.key, this.onChanged = (pressedDefault)});

@@ -5,9 +5,9 @@ import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
 import 'package:flutter_atividade2/Blocs/contact_event.dart';
 import 'package:flutter_atividade2/Blocs/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../model/contato.dart';
+import '../../model/contato.dart';
 import 'contato_tile.dart';
-import '../Dados/contactList.dart';
+import '../../Dados/contactList.dart';
 
 class TelaContatos extends StatelessWidget {
   const TelaContatos({super.key});
