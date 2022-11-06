@@ -4,7 +4,7 @@ import 'package:flutter_atividade2/Blocs/contact_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/user.dart';
 import '../../model/contato.dart';
-import "../../Dados/contactList.dart";
+//import "../../Dados/contactList.dart";
 import '../ChatsPage/Chat.dart';
 
 class ContatoTile extends StatelessWidget {
@@ -67,9 +67,12 @@ class ContactOptions extends StatelessWidget {
           title: const Text("Editar"),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-              return EditContato(
-                cont,
-                onFinish: onChanged,
+              return BlocProvider.value(
+                value: BlocProvider.of<ContactBloc>(context),
+                child: EditContato(
+                  cont,
+                  onFinish: onChanged,
+                ),
               );
             }));
           },
@@ -96,10 +99,8 @@ class ContactOptions extends StatelessWidget {
                           child: const Text("Não")),
                       OutlinedButton(
                         onPressed: () {
-                          //removeContato(cont);
                           Navigator.pop(context);
                           Navigator.pop(context);
-                          //onChanged();
                           BlocProvider.of<ContactBloc>(context).add(ContactDeleteEvent(cont));
                         },
                         child: const Text("Sim"),
@@ -188,7 +189,8 @@ class EditContato extends StatelessWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    editContato(cont.numero, aux);
+                    aux.id=cont.id;
+                    BlocProvider.of<ContactBloc>(context).add(ContactEditEvent(aux));
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                     onFinish();

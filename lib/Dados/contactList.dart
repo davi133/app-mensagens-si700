@@ -35,10 +35,17 @@ class ContactDataProvider {
     return null;
   }
 
-  Future<int> editContato(int id, Contato novo) async {
-
-    contactList[id] = novo.copy();
-    return 1;
+  Future<int> editContato(Contato novo) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    for (int i = 0; i < contactList.length; i++)
+    {
+      if (novo.id == contactList[i].id)
+      {
+        contactList[i] = novo;
+        return 1;
+      }
+    }
+    return 0;
   }
 
   Future<int> removeContato(Contato cont) async {
@@ -46,9 +53,10 @@ class ContactDataProvider {
     for (int i = 0; i < contactList.length; i++) {
       if (cont.numero == contactList[i].numero) {
         contactList.removeAt(i);
+        return 1;
       }
     }
-    return 1;
+    return 0;
   }
 }
 
@@ -65,7 +73,7 @@ class ContactDataProvider {
 
 
 
-var contactList = [
+var contactListDeprecated = [
   //done
   Contato("Felipe Araujo Santos Pinto", 169401),
   Contato("Davi Pereira Bergamin", 169753),
@@ -77,26 +85,26 @@ var contactList = [
 
 Contato? getByNumber(int number) {
   //done
-  for (int i = 0; i < contactList.length; i++) {
-    if (number == contactList[i].numero) {
-      return contactList[i];
+  for (int i = 0; i < contactListDeprecated.length; i++) {
+    if (number == contactListDeprecated[i].numero) {
+      return contactListDeprecated[i];
     }
   }
   return null;
 }
 
 void editContato(int number, Contato novo) {
-  for (int i = 0; i < contactList.length; i++) {
-    if (number == contactList[i].numero) {
-      contactList[i] = novo.copy();
+  for (int i = 0; i < contactListDeprecated.length; i++) {
+    if (number == contactListDeprecated[i].numero) {
+      contactListDeprecated[i] = novo.copy();
     }
   }
 }
 
 void removeContato(Contato cont) {
-  for (int i = 0; i < contactList.length; i++) {
-    if (cont.numero == contactList[i].numero) {
-      contactList.removeAt(i);
+  for (int i = 0; i < contactListDeprecated.length; i++) {
+    if (cont.numero == contactListDeprecated[i].numero) {
+      contactListDeprecated.removeAt(i);
     }
   }
 }

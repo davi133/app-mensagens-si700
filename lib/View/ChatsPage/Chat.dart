@@ -50,7 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 case 0:
                   Contato? c = getByNumber(widget.other.numero);
                   if (c == null) {
-                    contactList
+                    contactListDeprecated
                         .add(Contato(widget.other.nome, widget.other.numero));
                     showDialog(
                         context: context,
