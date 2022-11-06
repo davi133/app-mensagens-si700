@@ -38,7 +38,7 @@ class ContactDataProvider {
   }
 
   _createDb(Database db, int newVersion) async { 
-    print("criando DB =======================================================");
+    //print("criando DB =======================================================");
     db.execute("""
        CREATE TABLE $tableName (
            $chave INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,6 +119,7 @@ class ContactDataProvider {
 
   Future close() async
   {
+    print("closing db");
     final db = await helper.database;
     db.close();
   }
