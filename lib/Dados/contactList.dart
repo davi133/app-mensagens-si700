@@ -16,7 +16,7 @@ class ContactDataProvider {
 
   Future<List<Contato>> getContacts() async {
     await Future.delayed(const Duration(seconds: 1));
-    return contactList;
+    return [...contactList];
   }
 
   Future<int> addContato(Contato cont) async
@@ -42,6 +42,7 @@ class ContactDataProvider {
   }
 
   Future<int> removeContato(Contato cont) async {
+    await Future.delayed(const Duration(milliseconds: 500));
     for (int i = 0; i < contactList.length; i++) {
       if (cont.numero == contactList[i].numero) {
         contactList.removeAt(i);

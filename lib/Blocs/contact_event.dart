@@ -8,3 +8,14 @@ class ContactAddEvent extends ContactEvent{
   ContactAddEvent(this.cont);
 
 }
+class ContactEditEvent extends ContactEvent
+{
+  Contato cont;
+  ContactEditEvent(this.cont);
+}
+
+class ContactDeleteEvent extends ContactEvent
+{
+  Contato cont;
+  ContactDeleteEvent(this.cont);
+}
