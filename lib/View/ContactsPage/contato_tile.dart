@@ -30,7 +30,7 @@ class ContatoTile extends StatelessWidget {
       },
       //BOTÃO DE CONVERSAR COM O CONTATO =============================================================
       child: ListTile(
-        title: Text(cont.apelido),
+        title: Text(cont.apelido + cont.id.toString()),
         subtitle: Text("#${cont.numero}"),
         trailing: IconButton(
           onPressed: () {
