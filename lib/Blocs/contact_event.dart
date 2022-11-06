@@ -19,3 +19,8 @@ class ContactDeleteEvent extends ContactEvent
   Contato cont;
   ContactDeleteEvent(this.cont);
 }
+
+class ContactUpdateList extends ContactEvent
+{
+  
+}

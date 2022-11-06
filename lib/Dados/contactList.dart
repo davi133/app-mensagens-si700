@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -79,9 +80,10 @@ class ContactDataProvider {
   Future<int> addContato(Contato cont) async
   {
     Database? db = await database;
-    int result = await db.insert(tableName, cont.toMap());
-    //notify(result.toString(), note);
-    return result;
+    int res = await db.insert(tableName, cont.toMap());
+    cont.id=res;
+    notify("c",res, cont);
+    return res;
   }
 
   Future<Contato?> getByNumber(int number) async {
@@ -96,18 +98,18 @@ class ContactDataProvider {
 
   Future<int> editContato(Contato novo) async {
    Database db = await database;
-    int result = await db.update(tableName, novo.toMap(),
+    int res = await db.update(tableName, novo.toMap(),
         where: "$chave = ?", whereArgs: [novo.id]);
     
-    //notify(noteId, note);
-    return result;
+     notify("u",res, novo);
+    return res;
   }
 
   Future<int> removeContato(Contato cont) async {
-     Database db = await database;
-    int result = await db.delete(tableName,where: "$chave=?",whereArgs: [cont.id]);
-    //notify(noteId, null);
-    return result;
+    Database db = await database;
+    int res = await db.delete(tableName,where: "$chave=?",whereArgs: [cont.id]);
+    notify("d",res, cont);
+    return res;
   }
 
 
@@ -117,6 +119,37 @@ class ContactDataProvider {
     final db = await helper.database;
     db.close();
   }
+
+   notify(String operation, int res, Contato? cont) async {
+    //c = add contato
+    //u = edit contato
+    //d = delete contato
+    if (!_controller!.isClosed) 
+    _controller?.sink.add([operation, res, cont]);
+  }
+
+  Stream get stream {
+    _controller ??= StreamController.broadcast();
+    return _controller!.stream;
+  }
+
+  dispose() {
+    if (_controller != null) {
+      if (!_controller!.hasListener) {
+        print("closgin stream===============================================================================");
+        _controller!.close();
+        _controller = null;
+      }
+    }
+  }
+
+  static StreamController? _controller;
+
+
+
+
+
+
 }
 
 
@@ -150,20 +183,4 @@ Contato? getByNumber(int number) {
     }
   }
   return null;
-}
-
-void editContato(int number, Contato novo) {
-  for (int i = 0; i < contactListDeprecated.length; i++) {
-    if (number == contactListDeprecated[i].numero) {
-      contactListDeprecated[i] = novo.copy();
-    }
-  }
-}
-
-void removeContato(Contato cont) {
-  for (int i = 0; i < contactListDeprecated.length; i++) {
-    if (cont.numero == contactListDeprecated[i].numero) {
-      contactListDeprecated.removeAt(i);
-    }
-  }
 }

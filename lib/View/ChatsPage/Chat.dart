@@ -48,8 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
             onSelected: (value) {
               switch (value) {
                 case 0:
-                  Contato? c = getByNumber(widget.other.numero);
-                  if (c == null) {
+                  Contato? ca = getByNumber(widget.other.numero);
+                  if (ca == null) {
                     contactListDeprecated
                         .add(Contato(widget.other.nome, widget.other.numero));
                     showDialog(
