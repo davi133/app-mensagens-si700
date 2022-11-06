@@ -21,7 +21,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
       (event, emit) async {
         int res = await ContactDataProvider.helper.addContato(event.cont);
 
-        if (res == 1) {
+        if (res != 0) {
           //updating local lisy
           currentList.add(event.cont);
           //updating view
@@ -37,7 +37,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
     on<ContactDeleteEvent>(
       (event, emit) async {
         int res = await ContactDataProvider.helper.removeContato(event.cont);
-        if (res == 1) {
+        if (res !=0) {
           //updating local list
           for (int i = 0; i < currentList.length; i++) {
             if (event.cont.numero == currentList[i].numero) {
@@ -58,7 +58,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
     on<ContactEditEvent>(
       (event, emit) async {
         int res = await ContactDataProvider.helper.editContato(event.cont);
-        if (res == 1) {
+        if (res !=0) {
           //updating local list
           for (int i = 0; i < currentList.length; i++) {
 

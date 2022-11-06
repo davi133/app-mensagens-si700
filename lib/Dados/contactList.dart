@@ -78,42 +78,36 @@ class ContactDataProvider {
 
   Future<int> addContato(Contato cont) async
   {
-    await Future.delayed(const Duration(milliseconds: 500));
-    contactList.add(cont);
-    return 1;
+    Database? db = await database;
+    int result = await db.insert(tableName, cont.toMap());
+    //notify(result.toString(), note);
+    return result;
   }
 
   Future<Contato?> getByNumber(int number) async {
-    for (int i = 0; i < contactList.length; i++) {
-      if (number == contactList[i].numero) {
-        return contactList[i];
-      }
-    }
-    return null;
+    Database db = await database;
+    List<Map<String, Object?>> noteMapList =
+        await db.rawQuery("SELECT * FROM $tableName where $numero=$number;");
+    Contato cont= Contato.fromMap(noteMapList[0]);
+    
+    //TODO: is it working? maybe, I will not test it today
+    return cont;
   }
 
   Future<int> editContato(Contato novo) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    for (int i = 0; i < contactList.length; i++)
-    {
-      if (novo.id == contactList[i].id)
-      {
-        contactList[i] = novo;
-        return 1;
-      }
-    }
-    return 0;
+   Database db = await database;
+    int result = await db.update(tableName, novo.toMap(),
+        where: "$chave = ?", whereArgs: [novo.id]);
+    
+    //notify(noteId, note);
+    return result;
   }
 
   Future<int> removeContato(Contato cont) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    for (int i = 0; i < contactList.length; i++) {
-      if (cont.numero == contactList[i].numero) {
-        contactList.removeAt(i);
-        return 1;
-      }
-    }
-    return 0;
+     Database db = await database;
+    int result = await db.delete(tableName,where: "$chave=?",whereArgs: [cont.id]);
+    //notify(noteId, null);
+    return result;
   }
 
 
