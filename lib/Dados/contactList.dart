@@ -32,7 +32,7 @@ class ContactDataProvider {
   {
     Directory directory = await getApplicationDocumentsDirectory();
     String path = "${directory.path}$filepath";
-    await _deleteDatabase();//ONLY UNCOMMENT THIS TO RESET THE DATABASE
+    //await _deleteDatabase();//ONLY UNCOMMENT THIS TO RESET THE DATABASE
 
     return await openDatabase(path,version: 1,onCreate: _createDb);
   }
