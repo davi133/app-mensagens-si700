@@ -1,4 +1,4 @@
-import 'package:flutter_atividade2/model/contato.dart';
+import '../model/contato.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'contact_state.dart';
 import 'contact_event.dart';

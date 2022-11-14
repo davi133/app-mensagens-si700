@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
-import 'package:flutter_atividade2/Blocs/contact_event.dart';
+import '../../Blocs/contact_bloc.dart';
+import '../../Blocs/contact_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/user.dart';
 import '../../model/contato.dart';

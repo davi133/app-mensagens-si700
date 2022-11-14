@@ -17,7 +17,7 @@ var chatList = [
     Mensagem(CURRENT_USER, User("Ulisses", 1010),"👍"),
   ]),
   Conversa(CURRENT_USER, User("Fischer", 1005), mensagens: [
-    Mensagem(CURRENT_USER, User("Robson", 1005), "E quarta feira meu bacano"),
+    Mensagem(CURRENT_USER, User("Robson", 1005), "E domingo meu bacano"),
   ])
 
 ];

@@ -1,4 +1,4 @@
-import 'package:flutter_atividade2/Dados/contactList.dart';
+import '../Dados/contactList.dart';
 
 class Contato {
   int id =0;//id in the local database

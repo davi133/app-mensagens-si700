@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_atividade2/Blocs/contact_bloc.dart';
-import 'package:flutter_atividade2/Blocs/contact_event.dart';
-import 'package:flutter_atividade2/Blocs/contact_state.dart';
+import '../../Blocs/contact_bloc.dart';
+import '../../Blocs/contact_event.dart';
+import '../../Blocs/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/contato.dart';
 import 'contato_tile.dart';
@@ -25,7 +25,7 @@ class TelaContatos extends StatelessWidget {
         } else if (state is ContactLoaded) {
           return ListaContatos(contatos: state.lista_de_contatos);
         } else {
-          return const Center(child: Text("Você não tem amigos"));
+          return const Center(child: Text("Você não tem contatos"));
         }
       }),
     );

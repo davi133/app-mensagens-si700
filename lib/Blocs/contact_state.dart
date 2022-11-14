@@ -1,4 +1,4 @@
-import 'package:flutter_atividade2/model/contato.dart';
+import '../model/contato.dart';
 
 abstract class ContactState{}
 
