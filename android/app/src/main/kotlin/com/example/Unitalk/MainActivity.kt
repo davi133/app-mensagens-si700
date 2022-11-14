@@ -1,4 +1,4 @@
-package com.example.flutter_atividade2
+package com.example.Unitalk
 
 import io.flutter.embedding.android.FlutterActivity
 

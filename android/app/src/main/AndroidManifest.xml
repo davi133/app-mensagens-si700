@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_atividade2">
+    package="com.example.Unitalk">
    <application
-        android:label="flutter_atividade2"
+        android:label="Unitalk"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
