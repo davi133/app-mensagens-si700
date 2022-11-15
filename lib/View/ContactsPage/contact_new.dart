@@ -1,8 +1,8 @@
 
 
 import 'package:flutter/material.dart';
-import '../../Blocs/contact_bloc.dart';
-import '../../Blocs/contact_event.dart';
+import '../../Blocs/Contact/contact_bloc.dart';
+import '../../Blocs/Contact/contact_event.dart';
 import '../../model/contato.dart';
 
 

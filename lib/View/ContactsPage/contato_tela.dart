@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '../../Blocs/contact_bloc.dart';
-import '../../Blocs/contact_event.dart';
-import '../../Blocs/contact_state.dart';
+import '../../Blocs/Contact/contact_bloc.dart';
+import '../../Blocs/Contact/contact_event.dart';
+import '../../Blocs/Contact/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/contato.dart';
 import 'contato_tile.dart';

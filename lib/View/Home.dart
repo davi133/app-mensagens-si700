@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Blocs/contact_bloc.dart';
-import '../Blocs/contact_state.dart';
+import '../Blocs/Contact/contact_bloc.dart';
+import '../Blocs/Contact/contact_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'ContactsPage/contato_tela.dart';
 

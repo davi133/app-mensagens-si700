@@ -1,4 +1,4 @@
-import '../model/contato.dart';
+import '../../model/contato.dart';
 
 abstract class ContactState{}
 

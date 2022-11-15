@@ -1,8 +1,8 @@
-import '../model/contato.dart';
+import '../../model/contato.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'contact_state.dart';
 import 'contact_event.dart';
-import '../Dados/contactList.dart';
+import '../../Dados/contactList.dart';
 
 class ContactBloc extends Bloc<ContactEvent, ContactState> {
   List<Contato> currentList = [];
