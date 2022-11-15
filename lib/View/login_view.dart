@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'signin_view.dart';
 import 'Home.dart';
+import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -59,6 +61,10 @@ class LoginView extends StatelessWidget {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
                           }
+                          DatabaseReference _testRef = FirebaseDatabase.instance.ref().child("teste");
+                          _testRef.set("Log in ${Random().nextInt(100)}");
+
+
                           Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) {
                             return const Home();
