@@ -1,4 +1,7 @@
+import 'package:UnitalkV0_2/Blocs/Authentication/auth_bloc.dart';
+import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'signin_view.dart';
 import 'Home.dart';
 import 'dart:math';
@@ -7,6 +10,8 @@ import 'package:firebase_database/firebase_database.dart';
 class LoginView extends StatelessWidget {
   LoginView({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _email = "";
+  String _senha = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +36,18 @@ class LoginView extends StatelessWidget {
                       labelText: 'Email',
                     ),
                     validator: (String? inValue) {
-                      if (inValue != null) {}
+                      if (inValue != null) {
+                        if (inValue.isEmpty) {
+                          return "Insira seu email";
+                        }
+                      }
                       return null;
                     },
-                    onSaved: (String? inValue) {},
+                    onSaved: (String? inValue) {
+                      if (inValue != null) {
+                        _email = inValue;
+                      }
+                    },
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
@@ -43,15 +56,23 @@ class LoginView extends StatelessWidget {
                       labelText: 'Senha',
                     ),
                     validator: (String? inValue) {
-                      if (inValue != null) {}
+                      if (inValue != null) {
+                        if (inValue.isEmpty) {
+                          return "Insira a sua senha";
+                        }
+                      }
                       return null;
                     },
-                    onSaved: (String? inValue) {},
+                    onSaved: (String? inValue) {
+                      if (inValue != null) {
+                        _senha = inValue;
+                      }
+                    },
                   ),
                   Container(
                     height: 30,
                   ),
-                  //BOTÃO ===============================================
+                  //BOTÃO DE LOGIN ===============================================================
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -60,28 +81,36 @@ class LoginView extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
+                            //print("form login");
+                            BlocProvider.of<AuthBloc>(context)
+                                .add(LoginEvent(email: _email, senha: _senha));
                           }
-                          DatabaseReference _testRef = FirebaseDatabase.instance.ref().child("teste");
+                          DatabaseReference _testRef =
+                              FirebaseDatabase.instance.ref().child("teste");
                           _testRef.set("Log in ${Random().nextInt(100)}");
 
-
-                          Navigator.of(context)
+                          /*Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) {
                             return const Home();
-                          }));
+                          }));*/
                         },
                       ),
                       Container(
                         width: 20,
                       ),
+                      //BOTÃO DE CADASTRO ========================================================================
                       ElevatedButton(
-                          child: const Text("Cadastrar"),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (_) {
-                              return SigninView();
-                            }));
-                          }),
+                        child: const Text("Cadastrar"),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) {
+                                return SigninView(ab: BlocProvider.of<AuthBloc>(context));
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   )
                 ],

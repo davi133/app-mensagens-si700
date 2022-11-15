@@ -1,3 +1,5 @@
+import 'package:UnitalkV0_2/Blocs/Authentication/auth_bloc.dart';
+import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
 import 'package:flutter/material.dart';
 import '../Blocs/Contact/contact_bloc.dart';
 import '../Blocs/Contact/contact_state.dart';
@@ -26,7 +28,7 @@ class Home extends StatelessWidget {
             Tab(text: "Contatos"),
           ]),
           actions: [
-            //IconButton(onPressed: (){Navigator.of(context).pop();}, icon:const Icon(Icons.more_vert))
+          
             PopupMenuButton(
               itemBuilder: (context) => [
                 const PopupMenuItem<int>(value: 0, child: Text("Sair")),
@@ -34,7 +36,7 @@ class Home extends StatelessWidget {
               onSelected: (value) {
                 switch (value) {
                   case 0:
-                    Navigator.of(context).pop();
+                    BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
                     break;
                 }
               },

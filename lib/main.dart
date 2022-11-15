@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         //home: Home()
         home: BlocProvider(
-          create: (ctx) => AuthBloc(AuthenticatedState(sessionUser: SessionUser(nome: "nome", email: "asd", numero: 1))),
+          create: (ctx) => AuthBloc(UnauthenticatedState()),
           child: Wrapper(),
         ));
   }
