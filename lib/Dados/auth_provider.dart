@@ -7,6 +7,11 @@ class AuthenticationProvider {
   static AuthenticationProvider helper = AuthenticationProvider._createInstance();
   AuthenticationProvider._createInstance();
 
+  SessionUser get loggedSessionUser
+  {
+    return _user;
+  }
+
   Future<SessionUser> Login(
       {required String email, required String senha}) 
       async {
@@ -21,9 +26,10 @@ class AuthenticationProvider {
           name = aaaavomemata;
         }
       }
+
       _user = SessionUser(nome: name, email: email, numero: 1);
+      print(_user);
       return _user;
-      //return 'Success';
     } on FirebaseAuthException catch (e) {
       print("erro firebase: ");
       if (e.code == 'weak-password') {
@@ -38,13 +44,10 @@ class AuthenticationProvider {
     }
 
     _user = SessionUser(nome: "a", email: ".", numero: -1);
+    print(_user);
     return _user;
   }
 
-  /*Future<SessionUser> LoginAnonymously()async
-  {
-    return SessionUser(nome: "unknown yet", email: email, numero: 1);
-  }*/
   Future<SessionUser> SignIn(
       {required String email,
       required String nome,
@@ -61,6 +64,7 @@ class AuthenticationProvider {
         user.updateDisplayName(nome);
       }
       _user = SessionUser(nome: nome, email: email, numero: 1);
+      print(_user);
       return _user;
       //return 'Success';
     } on FirebaseAuthException catch (e) {
@@ -77,8 +81,13 @@ class AuthenticationProvider {
     }
 
     _user = SessionUser(nome: "name", email: ".", numero: -1);
+    print(_user);
     return _user;
   }
 
-  void Logout(SessionUser su) async {}
+  Future<int> Logout() async {
+    await FirebaseAuth.instance.signOut();
+    _user = SessionUser(nome: ".", email: ". ", numero: -1);
+    return 1;
+  }
 }

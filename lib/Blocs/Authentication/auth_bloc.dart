@@ -13,7 +13,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
     on<LoginEvent>((event, emit) async {
       //print("auth bloc login");
       _user = await AuthenticationProvider.helper.Login(email: event.email,senha: event.senha);
-      print(_user.numero);
       if (_user.numero != -1)
       {
         emit(AuthenticatedState(sessionUser: _user));
@@ -36,8 +35,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
       //emit(AuthenticatedState( sessionUser:  SessionUser(email: "anon@email.com",nome: "Anonimo",numero: -69)));
     },);*/
     
-    on<LogoutEvent>((event, emit) {
+    on<LogoutEvent>((event, emit) async {
       _user = SessionUser(nome: "...", email: "...", numero: -1);
+      await AuthenticationProvider.helper.Logout();
       emit(UnauthenticatedState());
     },);
   }
