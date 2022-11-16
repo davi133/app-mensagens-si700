@@ -52,12 +52,12 @@ class _ConversaTileState extends State<ConversaTile> {
     return GestureDetector(
       onTap: (){
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext ctx){return ChatScreen(widget.chat.outro, onNewMessage: reloadChatTile,);})
+          MaterialPageRoute(builder: (BuildContext ctx){return ChatScreen(widget.chat.User2, onNewMessage: reloadChatTile,);})
         );
 
       },
       child: ListTile(
-        title: Text(widget.chat.outro.nome),
+        title: Text(widget.chat.User2.nome),
         subtitle:Text(previewText),
 
       ),

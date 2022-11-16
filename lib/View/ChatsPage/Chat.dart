@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (convNull != null) {
       conv = convNull;
     }
-    String nome = conv.outro.numero != -1 ? conv.outro.nome : widget.other.nome;
+    String nome = conv.User2.numero != -1 ? conv.User2.nome : widget.other.nome;
 
     return Scaffold(
       appBar: AppBar(
@@ -191,9 +191,9 @@ class _ChatBottomState extends State<ChatBottom> {
                     }
                   } //aqui já é garantido que existe uma conversa
 
-                  User other = widget.conv.outro;
+                  User other = widget.conv.User2;
                   Mensagem msg =
-                      Mensagem(other, CURRENT_USER, newMsgController.text);
+                      Mensagem(CURRENT_USER, newMsgController.text);
                   convToUse.mensagens.add(msg);
                   widget.onSend();
                   newMsgController.text = "";

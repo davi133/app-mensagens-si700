@@ -8,7 +8,6 @@ import 'ContactsPage/contato_tela.dart';
 
 import "ChatsPage/conversa_tela.dart";
 
-import "ChatsPage/conversa_tela.dart";
 
 
 class Home extends StatelessWidget {

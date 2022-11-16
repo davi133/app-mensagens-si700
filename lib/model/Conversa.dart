@@ -4,11 +4,11 @@ import 'user.dart';
 
 class Conversa
 {
-  User owner;
-  User outro;
+  User User1;
+  User User2;
   List<Mensagem> mensagens = [];
 
-  Conversa(this.owner, this.outro, {this.mensagens =const []})
+  Conversa(this.User1, this.User2, {this.mensagens =const []})
   {
     if(mensagens.isEmpty)
     {
@@ -37,7 +37,7 @@ class Conversa
     //print("to string:============================================= ");
     //print(mensagens);
     String txt ="";
-    txt += "$owner with $outro";
+    txt += "$User1 with $User2";
     txt+="mensagens: \n";
     mensagens.forEach((element) {txt += element.toString();});
     return txt;
