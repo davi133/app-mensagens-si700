@@ -6,6 +6,7 @@ import 'signin_view.dart';
 import 'Home.dart';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -105,10 +106,32 @@ class LoginView extends StatelessWidget {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) {
-                                return SigninView(ab: BlocProvider.of<AuthBloc>(context));
+                                return SigninView(
+                                    ab: BlocProvider.of<AuthBloc>(context));
                               },
                             ),
                           );
+                        },
+                      ),
+                      //BOTÃO DE teste ========================================================================
+                      ElevatedButton(
+                        child: const Text("teste"),
+                        onPressed: (){
+                          print("sadasdasdad");
+                          var cloud = FirebaseFirestore.instance;
+
+                          ///cloud.collection("numeros").doc("last").set({"lastNumber": 1});
+                          /*var lastNumberDoc =
+                              cloud.collection("numeros").doc("last");
+                          lastNumberDoc
+                            ..get().then(
+                              (DocumentSnapshot doc) {
+                                final data = doc.data() as Map<String, dynamic>;
+                                print("last number is: ${data["lastNumber"]}=======================================");
+                              },
+                              onError: (e) =>
+                                  print("Error getting document: $e"),
+                            );*/
                         },
                       ),
                     ],
