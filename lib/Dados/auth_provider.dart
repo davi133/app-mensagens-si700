@@ -19,15 +19,34 @@ class AuthenticationProvider {
       UserCredential a = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: senha);
       String name = "";
+      String uid="";
       User? user = a.user;
       if (user != null) {
-        String? aaaavomemata = user.displayName;
-        if (aaaavomemata != null) {
-          name = aaaavomemata;
+        uid = user.uid;
+        String? aux = user.displayName;
+        if (aux != null) {
+          name = aux;
         }
       }
+      
+      var db = FirebaseFirestore.instance;
+      int number =-1;
+      var lastNumberDoc = db.collection("users-numbers").doc(uid);
+      print("got doc ${lastNumberDoc.id}");
 
-      _user = SessionUser(nome: name, email: email, numero: 1);
+      await lastNumberDoc
+        .get().then(
+          (DocumentSnapshot doc) {
+            
+            final data = doc.data() as Map<String, dynamic>;
+            
+            number = data["number"];
+          },
+          onError: (e) => print("Error getting document: $e"),
+        );
+        print("got number");
+
+      _user = SessionUser(nome: name, email: email, numero: number);
       print(_user);
       return _user;
     } on FirebaseAuthException catch (e) {
@@ -76,8 +95,9 @@ class AuthenticationProvider {
       await lastNumberDoc
         .get().then(
           (DocumentSnapshot doc) {
+            
             final data = doc.data() as Map<String, dynamic>;
-            //print("last number is ${data["lastNumber"]}===================================");
+           
             lastNumber = data["lastNumber"];
           },
           onError: (e) => print("Error getting document: $e"),
@@ -91,7 +111,7 @@ class AuthenticationProvider {
         "uid": uid,
         "number": lastNumber + 1,
       };
-      cloud.collection("users-numbers").add(association);
+      cloud.collection("users-numbers").doc(uid).set(association);
 
 
       _user =
@@ -121,5 +141,11 @@ class AuthenticationProvider {
     await FirebaseAuth.instance.signOut();
     _user = SessionUser(nome: ".", email: ". ", numero: -1);
     return 1;
+  }
+
+
+  Future<int> _getNumberByUID(String uid) async
+  {
+      return 0;
   }
 }
