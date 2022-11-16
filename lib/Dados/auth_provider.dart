@@ -53,6 +53,8 @@ class AuthenticationProvider {
       required String nome,
       required String senha}) async {
     try {
+
+      //creating user with firebase auth
       UserCredential a =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -65,28 +67,30 @@ class AuthenticationProvider {
         uid = user.uid;
       }
 
+      //using cloud firestore to give a Number to the user
       var cloud = FirebaseFirestore.instance;
 
-      int lastNumber = 1000;
+      //first we get the number of the last account added
+      int lastNumber = 0;
       var lastNumberDoc = cloud.collection("numeros").doc("last");
-      lastNumberDoc
-        ..get().then(
+      await lastNumberDoc
+        .get().then(
           (DocumentSnapshot doc) {
             final data = doc.data() as Map<String, dynamic>;
-            print("last number is ${data["lastNumber"]}===================================");
+            //print("last number is ${data["lastNumber"]}===================================");
             lastNumber = data["lastNumber"];
           },
           onError: (e) => print("Error getting document: $e"),
         );
       
+      //then we update the number os last added account in the database
       cloud.collection("numeros").doc("last").set({"lastNumber": lastNumber+1});
       
+      //then we create the association user-number
       final association = <String, dynamic>{
         "uid": uid,
         "number": lastNumber + 1,
       };
-
-
       cloud.collection("users-numbers").add(association);
 
 

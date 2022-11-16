@@ -116,22 +116,23 @@ class LoginView extends StatelessWidget {
                       //BOTÃO DE teste ========================================================================
                       ElevatedButton(
                         child: const Text("teste"),
-                        onPressed: (){
+                        onPressed: ()async {
                           print("sadasdasdad");
-                          var cloud = FirebaseFirestore.instance;
-
-                          ///cloud.collection("numeros").doc("last").set({"lastNumber": 1});
-                          /*var lastNumberDoc =
+                          /*var cloud = FirebaseFirestore.instance;
+                          int lastNumber = 0;
+                          var lastNumberDoc =
                               cloud.collection("numeros").doc("last");
-                          lastNumberDoc
-                            ..get().then(
+                          await lastNumberDoc
+                            .get().then(
                               (DocumentSnapshot doc) {
                                 final data = doc.data() as Map<String, dynamic>;
-                                print("last number is: ${data["lastNumber"]}=======================================");
+                                print("last number inside is ${data["lastNumber"]}===================================");
+                                lastNumber = data["lastNumber"];
                               },
                               onError: (e) =>
                                   print("Error getting document: $e"),
-                            );*/
+                            );
+                            print("lastNumber outside is $lastNumber ===============================================================");*/
                         },
                       ),
                     ],
