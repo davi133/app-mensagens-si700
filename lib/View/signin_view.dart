@@ -72,6 +72,7 @@ class SigninView extends StatelessWidget {
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
+                    obscureText: true,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: 'Senha',

@@ -1,5 +1,5 @@
-import 'cha_list_event.dart';
-import 'cha_list_state.dart';
+import 'chat_list_event.dart';
+import 'chat_list_state.dart';
 import 'package:bloc/bloc.dart';
 
 class ChatListBloc extends Bloc<ChatListEvent,ChatListState>

@@ -1,7 +1,7 @@
 import '../model/session_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../model/user.dart' as Model;
 class AuthenticationProvider {
   SessionUser _user = SessionUser(nome: "nome", email: "email", numero: -1);
 
@@ -13,11 +13,16 @@ class AuthenticationProvider {
     return _user;
   }
 
-  Future<SessionUser> Login(
-      {required String email, required String senha}) async {
+  SessionUser get user
+  {
+    return _user;
+  }
+
+  Future<SessionUser> Login({required String email, required String senha}) async {
     try {
       UserCredential a = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: senha);
+
       String name = "";
       String uid="";
       User? user = a.user;
@@ -67,10 +72,7 @@ class AuthenticationProvider {
     return _user;
   }
 
-  Future<SessionUser> SignIn(
-      {required String email,
-      required String nome,
-      required String senha}) async {
+  Future<SessionUser> SignIn({required String email,required String nome,required String senha}) async {
     try {
 
       //creating user with firebase auth
@@ -110,6 +112,7 @@ class AuthenticationProvider {
       final association = <String, dynamic>{
         "uid": uid,
         "number": lastNumber + 1,
+        "nome":nome
       };
       cloud.collection("users-numbers").doc(uid).set(association);
 
@@ -147,5 +150,22 @@ class AuthenticationProvider {
   Future<int> _getNumberByUID(String uid) async
   {
       return 0;
+  }
+
+  static Future<Model.User?> getUserByNumber(int number) async
+  {
+      FirebaseFirestore db = FirebaseFirestore.instance;
+    //var chatDocs = db.collection('Conversas').where('users',arrayContains: AuthenticationProvider.helper.user.numero);
+    var usersNumbers = db.collection('users-numbers').where('number',isEqualTo: number).get();
+    Model.User user = Model.User("-1", -1);
+    await usersNumbers.then((value) {
+      var dat = value.docs[0].data();
+      //print('auth data is ${value.docs[0].data()}');
+      user = Model.User.fromMap(dat);
+      //print(user);
+    });
+
+    return user;
+    
   }
 }

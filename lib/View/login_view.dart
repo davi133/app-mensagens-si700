@@ -1,5 +1,6 @@
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_bloc.dart';
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
+import 'package:UnitalkV0_2/Dados/chat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'signin_view.dart';
@@ -52,6 +53,7 @@ class LoginView extends StatelessWidget {
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
+                    obscureText: true,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: 'Senha',
@@ -116,23 +118,9 @@ class LoginView extends StatelessWidget {
                       //BOTÃO DE teste ========================================================================
                       ElevatedButton(
                         child: const Text("teste"),
-                        onPressed: ()async {
+                        onPressed: () async {
                           print("sadasdasdad");
-                          /*var cloud = FirebaseFirestore.instance;
-                          int lastNumber = 0;
-                          var lastNumberDoc =
-                              cloud.collection("numeros").doc("last");
-                          await lastNumberDoc
-                            .get().then(
-                              (DocumentSnapshot doc) {
-                                final data = doc.data() as Map<String, dynamic>;
-                                print("last number inside is ${data["lastNumber"]}===================================");
-                                lastNumber = data["lastNumber"];
-                              },
-                              onError: (e) =>
-                                  print("Error getting document: $e"),
-                            );
-                            print("lastNumber outside is $lastNumber ===============================================================");*/
+                          ChatProvider.helper.getChats();
                         },
                       ),
                     ],

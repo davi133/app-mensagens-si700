@@ -6,6 +6,7 @@ class Conversa
 {
   User User1;
   User User2;
+  
   List<Mensagem> mensagens = [];
 
   Conversa(this.User1, this.User2, {this.mensagens =const []})
@@ -16,6 +17,8 @@ class Conversa
     }
   }
  
+
+
 
   void addMensagem(Mensagem toAdd)
   {
@@ -37,9 +40,10 @@ class Conversa
     //print("to string:============================================= ");
     //print(mensagens);
     String txt ="";
-    txt += "$User1 with $User2";
+    txt += "$User1 with $User2 ";
     txt+="mensagens: \n";
     mensagens.forEach((element) {txt += element.toString();});
+    txt +="\n";
     return txt;
   }
 

@@ -8,6 +8,12 @@ class User {
 
   User( this.nome, this.numero);
 
+  User.fromMap(map)
+  {
+    nome = map['nome'];
+    numero= map['number'];
+  }
+
   @override
   String toString()
   {
