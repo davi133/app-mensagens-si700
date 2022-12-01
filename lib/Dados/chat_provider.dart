@@ -1,11 +1,15 @@
+import 'package:UnitalkV0_2/View/ChatsPage/Chat.dart';
 import 'package:UnitalkV0_2/model/mensagem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'auth_provider.dart';
 import '../model/Conversa.dart';
 import '../model/user.dart';
+import '../model/mensagem.dart';
 
 class ChatProvider {
   List<Conversa> _conversas = [];
+
+  //Conversa conversaAtual = Conversa.conversaInvalida();
 
   static ChatProvider helper = ChatProvider._createInstance();
   ChatProvider._createInstance();
@@ -37,9 +41,9 @@ class ChatProvider {
           //print("user1 $user1");
           user2 = user2_aux;
           //print("user1 $user2");
-          Conversa conv = Conversa(user1_aux, user2);
+          Conversa conv = Conversa(user1_aux, user2, id: chat.id);
 
-          var msgs = chat.reference.collection("Mensagens").orderBy('envio', descending: true).limit(1);
+          var msgs = chat.reference.collection("Mensagens").orderBy('envio', descending: false);
           await msgs.get().then((value) {
             //iterando todas as mensagens
             for (var msg in value.docs) {
@@ -69,6 +73,14 @@ class ChatProvider {
     return "";
   }
 
-  //iniciar chat
+  
+
+  Future<String> sendMessage(Conversa conv ,Mensagem msg)async 
+  {
+    print("sending message on chatProvider");
+    print(conv.id);
+
+    return "";
+  }
 
 }

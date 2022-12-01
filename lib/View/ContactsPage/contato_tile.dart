@@ -36,7 +36,9 @@ class ContatoTile extends StatelessWidget {
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (BuildContext ctx) {
-              return ChatScreen(User(cont.apelido, cont.numero));
+              //return ChatScreen(User(cont.apelido, cont.numero));
+              //TODO REFAZER ESSA FEATURE
+              return Text("TODO: LEMBRAR DE REFAZER ESSA FEATURE");
             }));
           },
           icon: const Icon(Icons.chat),

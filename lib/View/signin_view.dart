@@ -105,6 +105,7 @@ class SigninView extends StatelessWidget {
                         ab.add(SignInEvent(email: _email, nome: _nome, senha: _senha));
                       }
                       Navigator.of(context).pop();
+                      FocusManager.instance.primaryFocus?.unfocus();
                       /*Navigator.of(context)
                           .push(MaterialPageRoute(builder: (_) {
                         return const Home();

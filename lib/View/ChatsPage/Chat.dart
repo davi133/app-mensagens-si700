@@ -1,19 +1,31 @@
+import 'package:UnitalkV0_2/Blocs/Chats/chat_bloc.dart';
+import 'package:UnitalkV0_2/Blocs/Chats/chat_event.dart';
+import 'package:UnitalkV0_2/Blocs/Chats/chat_state.dart';
+import 'package:UnitalkV0_2/Dados/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../Dados/contactList.dart';
-import '../../Dados/global.dart';
 import '../../model/contato.dart';
 import '../../model/user.dart';
 import '../../model/Conversa.dart';
-import '../../Dados/chatList.dart';
+
 import '../../model/mensagem.dart';
 
-void defaultFunction() {}
+class ChatWith extends StatelessWidget {
+  const ChatWith(this.conversa, {super.key});
+  final Conversa conversa;
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ChatBloc(ChatLoadedState()),
+      child: ChatScreen(conversa),
+    );
+  }
+}
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen(this.other,
-      {super.key, this.onNewMessage = defaultFunction});
-  final User other;
-  final Function onNewMessage;
+  const ChatScreen(this.conversa, {super.key});
+  final Conversa conversa;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -21,18 +33,27 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   void updateChatScreen() {
-    widget.onNewMessage();
-    setState(() {});
+    //widget.onNewMessage();
+    //setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    Conversa? convNull = getChatByOthersNumber(widget.other.numero);
-    Conversa conv = Conversa.conversaInvalida();
-    if (convNull != null) {
-      conv = convNull;
+    Conversa conv = widget.conversa;
+    print("conversa é");
+    print(conv);
+    User me;
+    User other;
+    int me_num = AuthenticationProvider.helper.user.numero;
+    if (conv.User1.numero == me_num) {
+      me = conv.User1;
+      other = conv.User2;
+    } else {
+      other = conv.User1;
+      me = conv.User2;
     }
-    String nome = conv.User2.numero != -1 ? conv.User2.nome : widget.other.nome;
+
+    String nome = other.nome;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,23 +69,23 @@ class _ChatScreenState extends State<ChatScreen> {
             onSelected: (value) {
               switch (value) {
                 case 0:
-                  Contato? ca = getByNumber(widget.other.numero);
-                  if (ca == null) {
-                    contactListDeprecated
-                        .add(Contato(widget.other.nome, widget.other.numero));
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return SimpleDialog(
-                            title: const Text("Contato adicionado"),
-                            children: [
-                              TextButton(onPressed: (){
-                                Navigator.of(context).pop();
-                              }, child: const Text("Ok"))
-                            ],
-                          );
-                        });
-                  }
+                  Contato novo = Contato(other.nome, other.numero);
+                  ContactDataProvider.helper.addContato(novo);
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return SimpleDialog(
+                          title: const Text("Contato adicionado"),
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Ok"))
+                          ],
+                        );
+                      });
+
                   break;
               }
             },
@@ -73,15 +94,31 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Container(
         margin: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            MessageList(conv),
-            ChatBottom(conv, widget.other, onSend: updateChatScreen),
-          ],
+        child: BlocBuilder<ChatBloc, ChatState>(
+          bloc: BlocProvider.of<ChatBloc>(context),
+          builder: (context, state) {
+            if (state is ChatErrorState) {
+              return const Center(child: Text("Algo deu errado"));
+            } else if (state is ChatLoadedState) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  MessageList(conv),
+                  ChatBottom(conv),
+                ],
+              );
+            } else {
+              return const Center(child: Text("erro inesperado"));
+            }
+          },
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 
@@ -108,20 +145,22 @@ class MessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool is_it_me =
+        msg.from.numero == AuthenticationProvider.helper.user.numero;
     return Row(
-      mainAxisAlignment: msg.from.numero == CURRENT_USER.numero
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
+      mainAxisAlignment:
+          is_it_me ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Container(
           decoration: BoxDecoration(
-              color: msg.from.numero == CURRENT_USER.numero
-                  ? Colors.blue
-                  : Colors.blue[100],
+              color: is_it_me ? Colors.blue : Colors.blue[100],
               borderRadius: const BorderRadius.all(Radius.circular(6))),
-          padding: const EdgeInsets.all(5.0),
-          margin: const EdgeInsets.all(5.0),
-          child: Text(msg.texto),
+          padding: const EdgeInsets.all(15.0),
+          margin: const EdgeInsets.all(10.0),
+          child: Text(
+            msg.texto,
+            style: TextStyle(color: is_it_me ? Colors.white : Colors.black),
+          ),
         ),
       ],
     );
@@ -129,15 +168,9 @@ class MessageTile extends StatelessWidget {
 }
 
 class ChatBottom extends StatefulWidget {
-  const ChatBottom(
-    this.conv,
-    this.outro, {
-    super.key,
-    required this.onSend,
-  });
+  const ChatBottom(this.conv,{super.key,});
   final Conversa conv;
-  final Function onSend;
-  final User outro;
+
   @override
   State<ChatBottom> createState() => _ChatBottomState();
 }
@@ -179,24 +212,12 @@ class _ChatBottomState extends State<ChatBottom> {
                 //SENDING MESSAGE ======================================================================
                 if (newMsgController.text.trim().isNotEmpty) {
                   //
-                  Conversa convToUse = widget.conv;
-                  //CHECANDO SE CONVERSA REALMENTE EXISTE ====================
-                  Conversa? conversa =
-                      getChatByOthersNumber(widget.outro.numero);
-                  if (conversa == null) {
-                    chatList.add(Conversa(CURRENT_USER, widget.outro));
-                    Conversa? aux = getChatByOthersNumber(widget.outro.numero);
-                    if (aux != null) {
-                      convToUse = aux;
-                    }
-                  } //aqui já é garantido que existe uma conversa
-
-                  User other = widget.conv.User2;
-                  Mensagem msg =
-                      Mensagem(CURRENT_USER, newMsgController.text);
-                  convToUse.mensagens.add(msg);
-                  widget.onSend();
+                  User me = User(AuthenticationProvider.helper.user.nome, AuthenticationProvider.helper.user.numero);
+                  
+                  Mensagem msg = Mensagem(me, newMsgController.text.trim());
                   newMsgController.text = "";
+                  BlocProvider.of<ChatBloc>(context).add(ChatSendMessageEvent(widget.conv, msg));
+                  FocusManager.instance.primaryFocus?.unfocus();
                 }
               },
               child: const Icon(Icons.arrow_forward),

@@ -1,15 +1,18 @@
+import 'dart:ffi';
+
 import '../model/mensagem.dart';
 
 import 'user.dart';
 
 class Conversa
 {
+  String id;
   User User1;
   User User2;
   
   List<Mensagem> mensagens = [];
 
-  Conversa(this.User1, this.User2, {this.mensagens =const []})
+  Conversa(this.User1, this.User2, {this.id="-1",this.mensagens =const []})
   {
     if(mensagens.isEmpty)
     {

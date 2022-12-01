@@ -1,10 +1,11 @@
 import 'package:UnitalkV0_2/Blocs/Chats/chat_list_bloc.dart';
 import 'package:UnitalkV0_2/Blocs/Chats/chat_list_event.dart';
 import 'package:UnitalkV0_2/Blocs/Chats/chat_list_state.dart';
+import 'package:UnitalkV0_2/Dados/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../View/ChatsPage/Chat.dart';
-import '../../Dados/chatList.dart';
+import '../../model/user.dart';
 import '../../model/Conversa.dart';
 
 class TelaConversas extends StatelessWidget {
@@ -12,7 +13,6 @@ class TelaConversas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return BlocBuilder<ChatListBloc, ChatListState>(
       bloc: BlocProvider.of<ChatListBloc>(context),
       builder: (context, state) {
@@ -27,61 +27,49 @@ class TelaConversas extends StatelessWidget {
               return ConversaTile(chats.elementAt(index));
             },
           );
-        }
-        else if (state is ChatListErrorState)
-        {
-          return  Center(child: Text("Erro ao carregar lista de mensagens: ${state.errorMessage}"),);
-        }
-        else
-        {
-          return const Center(child: Text("erro inesperado"),);
+        } else if (state is ChatListErrorState) {
+          return Center(
+            child: Text(
+                "Erro ao carregar lista de mensagens: ${state.errorMessage}"),
+          );
+        } else {
+          return const Center(
+            child: Text("erro inesperado"),
+          );
         }
       },
     );
   }
 }
 
-class ConversaTile extends StatefulWidget {
+class ConversaTile extends StatelessWidget {
   //TILE
 
   const ConversaTile(this.chat, {super.key});
   final Conversa chat;
-  //final Function onPressed;
-
-  @override
-  State<ConversaTile> createState() => _ConversaTileState();
-}
-
-class _ConversaTileState extends State<ConversaTile> {
-  void reloadChatTile() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
     String previewText = "";
-    if (widget.chat.mensagens.isNotEmpty) {
-      previewText = widget.chat.mensagens.last.texto;
+    if (chat.mensagens.isNotEmpty) {
+      previewText = chat.mensagens.last.texto;
+      print("setting preview text");
     }
+    User other = chat.User1.numero == AuthenticationProvider.helper.user.numero
+        ? chat.User2
+        : chat.User1;
 
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (BuildContext ctx) {
-          return ChatScreen(
-            widget.chat.User2,
-            onNewMessage: reloadChatTile,
-          );
+          return ChatWith(chat);
         }));
       },
       child: ListTile(
-        title: Text(widget.chat.User2.nome),
+        title: Text(other.nome),
         subtitle: Text(previewText),
       ),
     );
   }
-}
-
-void pressedDefault() {
-  return;
 }

@@ -70,6 +70,7 @@ class ContactDataProvider {
   }
 
   Future<int> addContato(Contato cont) async {
+    //TODO consertar contatos duplicados?
     Database? db = await database;
     int res = await db.insert(tableName, cont.toMap());
     cont.id = res;
@@ -140,22 +141,3 @@ class ContactDataProvider {
   static StreamController? _controller;
 }
 
-var contactListDeprecated = [
-  //done
-  Contato("Felipe Araujo Santos Pinto", 169401),
-  Contato("Davi Pereira Bergamin", 169753),
-  Contato("Joao", 1003),
-  Contato("Pedro", 1004),
-  //Contato("Robson", 1005),
-  Contato("Ulisses", 1010)
-];
-
-Contato? getByNumber(int number) {
-  //done
-  for (int i = 0; i < contactListDeprecated.length; i++) {
-    if (number == contactListDeprecated[i].numero) {
-      return contactListDeprecated[i];
-    }
-  }
-  return null;
-}

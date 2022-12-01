@@ -88,9 +88,7 @@ class LoginView extends StatelessWidget {
                             BlocProvider.of<AuthBloc>(context)
                                 .add(LoginEvent(email: _email, senha: _senha));
                           }
-                          DatabaseReference _testRef =
-                              FirebaseDatabase.instance.ref().child("teste");
-                          _testRef.set("Log in ${Random().nextInt(100)}");
+                          FocusManager.instance.primaryFocus?.unfocus();
 
                           /*Navigator.of(context)
                               .push(MaterialPageRoute(builder: (_) {
