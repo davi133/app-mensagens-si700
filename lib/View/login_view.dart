@@ -120,7 +120,7 @@ class LoginView extends StatelessWidget {
                         child: const Text("teste"),
                         onPressed: () async {
                           print("sadasdasdad");
-                          ChatProvider.helper.getChats();
+                          ChatProvider.helper.fetchChats();
                         },
                       ),
                     ],

@@ -1,5 +1,8 @@
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_bloc.dart';
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
+import 'package:UnitalkV0_2/Blocs/Chats/chat_list_bloc.dart';
+import 'package:UnitalkV0_2/Blocs/Chats/chat_list_event.dart';
+import 'package:UnitalkV0_2/Blocs/Chats/chat_list_state.dart';
 import 'package:flutter/material.dart';
 import '../Blocs/Contact/contact_bloc.dart';
 import '../Blocs/Contact/contact_state.dart';
@@ -44,7 +47,8 @@ class Home extends StatelessWidget {
         ),
         body: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (ctx)=>ContactBloc(ContactFetchING()))
+            BlocProvider(create: (ctx)=>ContactBloc(ContactFetchING())),
+            BlocProvider(create: (ctx)=> ChatListBloc(ChatListFetchingState()))
           ],
           child: const TabBarView(children: [
             TelaConversas(),

@@ -74,8 +74,7 @@ class _ListaContatosState extends State<ListaContatos> {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (ctx) {
                       return NewContactScreen(
-                        BlocProvider.of<ContactBloc>(context)
-                      );
+                          BlocProvider.of<ContactBloc>(context));
                     }));
                   },
                   tooltip: 'Novo contato',
@@ -89,5 +88,3 @@ class _ListaContatosState extends State<ListaContatos> {
     );
   }
 }
-
-
