@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
+import 'package:UnitalkV0_2/Dados/auth_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +13,7 @@ class ContactDataProvider {
   static const String chave = "id";
   static const String apelido = "apelido";
   static const String numero = "numero";
+  static const String owner = "owener";
 
   static ContactDataProvider helper = ContactDataProvider._createInstance();
   static Database? _database;
@@ -37,18 +39,19 @@ class ContactDataProvider {
     db.execute("""
        CREATE TABLE $tableName (
            $chave INTEGER PRIMARY KEY AUTOINCREMENT,
+           $owner INTEGER,
            $apelido TEXT,
            $numero INTEGER
           );
     """);
 
     db.insert(tableName,
-        Contato("Felipe Araujo Santos Pinto", 169401, id: 0).toMap());
+        Contato("Felipe Araujo Santos Pinto", 169401, id: 0).toMap(ownerId: 1001));
     db.insert(
-        tableName, Contato("Davi Pereira Bergamin", 169753, id: 1).toMap());
-    db.insert(tableName, Contato("Joao", 1003, id: 2).toMap());
-    db.insert(tableName, Contato("Pedro", 1004, id: 3).toMap());
-    db.insert(tableName, Contato("Ulisses", 1010).toMap());
+        tableName, Contato("Davi Pereira Bergamin", 169753, id: 1).toMap(ownerId: 1001));
+    db.insert(tableName, Contato("Joao", 1003, id: 2).toMap(ownerId: 1001));
+    db.insert(tableName, Contato("Pedro", 1004, id: 3).toMap(ownerId: 1001));
+    db.insert(tableName, Contato("Ulisses", 1010).toMap(ownerId: 1001));
   }
 
   Future<void> _deleteDatabase() async {
@@ -61,7 +64,7 @@ class ContactDataProvider {
     await Future.delayed(const Duration(seconds: 1));
     Database db = await database;
     List<Map<String, Object?>> noteMapList =
-        await db.rawQuery("SELECT * FROM $tableName;");
+        await db.rawQuery("SELECT * FROM $tableName WHERE $owner = ${AuthenticationProvider.helper.user.numero};");
     List<Contato> contactList = [];
     for (int i = 0; i < noteMapList.length; i++) {
       contactList.add(Contato.fromMap(noteMapList[i]));
@@ -72,13 +75,13 @@ class ContactDataProvider {
   Future<int> addContato(Contato cont) async {
     //TODO consertar contatos duplicados?
     Database? db = await database;
-    int res = await db.insert(tableName, cont.toMap());
+    int res = await db.insert(tableName, cont.toMap(ownerId: AuthenticationProvider.helper.user.numero));
     cont.id = res;
     notify("c", res, cont);
     return res;
   }
 
-  Future<Contato?> getByNumber(int number) async {
+  /*Future<Contato?> getByNumber(int number) async {
     Database db = await database;
     List<Map<String, Object?>> noteMapList =
         await db.rawQuery("SELECT * FROM $tableName where $numero=$number;");
@@ -86,11 +89,11 @@ class ContactDataProvider {
 
     //TODO: is it working? maybe, I will not test it today
     return cont;
-  }
+  }*/
 
   Future<int> editContato(Contato novo) async {
     Database db = await database;
-    int res = await db.update(tableName, novo.toMap(),
+    int res = await db.update(tableName, novo.toMap(ownerId: AuthenticationProvider.helper.user.numero),
         where: "$chave = ?", whereArgs: [novo.id]);
 
     notify("u", res, novo);

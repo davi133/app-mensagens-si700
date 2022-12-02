@@ -1,3 +1,5 @@
+import 'package:UnitalkV0_2/Dados/auth_provider.dart';
+
 import '../Dados/contactList.dart';
 
 class Contato {
@@ -22,12 +24,13 @@ class Contato {
     return Contato(apelido, numero);
   }
 
-  toMap({bool withId=true})
+  toMap({bool withId=true,int ownerId=-1})
   {
     var map = <String, dynamic>{};
     if (id !=-1) map[ContactDataProvider.chave] = id;
     map[ContactDataProvider.apelido] = apelido;
     map[ContactDataProvider.numero] = numero;
+    if (ownerId != -1)map[ContactDataProvider.owner] = ownerId;
     return map;
   }
 

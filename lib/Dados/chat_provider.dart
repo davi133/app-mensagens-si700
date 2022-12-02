@@ -27,17 +27,12 @@ class ChatProvider {
     {
       if (_conversas[i].id == conv.id)
       {
-        //_conversas[i].mensagens = [];
-        //_conversas[i].mensagens = conv.mensagens;
-        //print("conversa atualizada pelo _handler");
-        //print("conversa velha ${_conversas[i]}");
-        //print("conversa nova ${conv}");
         return;
       }
     }
     
     _conversas.add(conv);
-    print("conversa adicionada pelo _handler");
+    //print("conversa adicionada pelo _handler");
     //print(conv);
   }
 
@@ -78,7 +73,7 @@ class ChatProvider {
           msgs.listen((value) {
             //iterando todas as mensagens
             //print("starting to listen for mensagens");
-            print("==================================================\nconversa anntes era is: $conv");
+            //print("==================================================\nconversa anntes era is: $conv");
             value.docChanges[0].doc.data();
             value.docs[0].data();
             for (var msg in value.docChanges) {
@@ -98,12 +93,12 @@ class ChatProvider {
               var mensag = Mensagem(emissor, dat['texto']);
               mensag.sent = date;
               conv.addMensagem(mensag);
-              print("adding message: $mensag to ${conv.id}");
+              //print("adding message: $mensag to ${conv.id}");
               }
               
             }
             _addConversaToCached(conv);
-            print("==================================================\nfinal conversa is: $conv");
+            //print("==================================================\nfinal conversa is: $conv");
             
             
             
@@ -123,22 +118,22 @@ class ChatProvider {
   }
 
   Future<String> sendMessage(Conversa conv, Mensagem msg) async {
-    print("sending message ${msg.texto} on chatProvider");
-    print(conv.id);
+    //print("sending message ${msg.texto} on chatProvider");
+    //print(conv.id);
     FirebaseFirestore db = FirebaseFirestore.instance;
     final association = <String, dynamic>{
       "emissor": msg.from.numero,
       "envio": Timestamp.fromDate(msg.sent),
       "texto": msg.texto
     };
-    print(association);
+    //print(association);
     db
         .collection("Conversas")
         .doc(conv.id)
         .collection("Mensagens")
         .add(association)
         .then((value) {
-      print("enviado?");
+      //print("enviado?");
     }); 
 
     notify("send", 1, conv.id);
@@ -152,7 +147,7 @@ class ChatProvider {
   //##########
 
   notify(String operation, int res, String chatId) async {
-    print("chat provider is notifyng");
+    //print("chat provider is notifyng");
     if (!_controller!.isClosed) _controller?.sink.add([operation, res, chatId]);
   }
 
@@ -164,8 +159,7 @@ class ChatProvider {
   dispose() {
     if (_controller != null) {
       if (!_controller!.hasListener) {
-        print(
-            "closgin stream===============================================================================");
+        //print("closgin stream===============================================================================");
         _controller!.close();
         _controller = null;
       }
