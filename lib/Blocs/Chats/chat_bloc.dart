@@ -9,8 +9,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState>
   {
     
     on<ChatSendMessageEvent>((event, emit) async{
-      print('sengin message on bloc');
+      print('sending message on bloc');
       await ChatProvider.helper.sendMessage(event.conv,event.msg);
+      print("sim, enviado");
+      emit(ChatLoadedState());
     },);
     
     on<ChatRecieveMessageEvent>((event, emit) {

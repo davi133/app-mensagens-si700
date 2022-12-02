@@ -123,19 +123,21 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessageList extends StatelessWidget {
-  const MessageList(this.conv, {super.key});
+  MessageList(this.conv, {super.key});
   final Conversa conv;
-
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: conv.mensagens.length,
-        itemBuilder: (BuildContext context, int index) {
-          return MessageTile(conv.mensagens[index]);
-        },
-      ),
+    var msgs = conv.mensagens.reversed.toList();
+    //esse é o jeito mais preguiçoso de fazer a lista de mensagens ser inicializada em baixo
+    //por outro ladd, ele tambem faz a lista ficar do tamanho certo quando vc abre o teclado
+    var lista = ListView.builder(
+      reverse: true,
+      itemCount: msgs.length,
+      itemBuilder: (BuildContext context, int index) {
+        return MessageTile(msgs[index]);
+      },
     );
+    return Expanded(child: lista);
   }
 }
 
@@ -168,7 +170,10 @@ class MessageTile extends StatelessWidget {
 }
 
 class ChatBottom extends StatefulWidget {
-  const ChatBottom(this.conv,{super.key,});
+  const ChatBottom(
+    this.conv, {
+    super.key,
+  });
   final Conversa conv;
 
   @override
@@ -212,11 +217,15 @@ class _ChatBottomState extends State<ChatBottom> {
                 //SENDING MESSAGE ======================================================================
                 if (newMsgController.text.trim().isNotEmpty) {
                   //
-                  User me = User(AuthenticationProvider.helper.user.nome, AuthenticationProvider.helper.user.numero);
-                  
+                  User me = User(AuthenticationProvider.helper.user.nome,
+                      AuthenticationProvider.helper.user.numero);
+
                   Mensagem msg = Mensagem(me, newMsgController.text.trim());
+                  msg.sent = DateTime.now();
                   newMsgController.text = "";
-                  BlocProvider.of<ChatBloc>(context).add(ChatSendMessageEvent(widget.conv, msg));
+                  BlocProvider.of<ChatBloc>(context)
+                      .add(ChatSendMessageEvent(widget.conv, msg));
+                  widget.conv.addMensagem(msg);
                   FocusManager.instance.primaryFocus?.unfocus();
                 }
               },

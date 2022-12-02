@@ -8,3 +8,8 @@ class ChatListAddEvent extends ChatListEvent
 {
 
 }
+
+class ChatListRefreshEvent extends ChatListEvent
+{
+
+}

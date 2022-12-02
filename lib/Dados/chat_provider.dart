@@ -5,6 +5,7 @@ import 'auth_provider.dart';
 import '../model/Conversa.dart';
 import '../model/user.dart';
 import '../model/mensagem.dart';
+import 'dart:async';
 
 class ChatProvider {
   List<Conversa> _conversas = [];
@@ -21,7 +22,7 @@ class ChatProvider {
   //retrieve all chats
   Future<String> fetchChats() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    //var chatDocs = db.collection('Conversas').where('users',arrayContains: AuthenticationProvider.helper.user.numero);
+    String errorMessage="";
     var chatDocs = db.collection('Conversas').where('users',arrayContains: AuthenticationProvider.helper.user.numero).get();
 
     await chatDocs.then((value) async {
@@ -54,33 +55,69 @@ class ChatProvider {
                 emissor = user2;
               }
               Timestamp t = msg.data()['envio'] as Timestamp;
+              print("enviod é: ${msg.data()['envio']}");
               DateTime date = t.toDate();
               var mensag = Mensagem(emissor, msg.data()['texto']);
               mensag.sent = date;
               conv.addMensagem(mensag);
             }
           },
-          onError: (e)=>"$e");
+          onError: (e){errorMessage = "$e";});
           //print("adding to conversas");
           _conversas.add(conv);
         }
       }
-    },onError:(e)=>"$e");
+    },onError:(e){errorMessage = "$e";});
 
     //print("lenght is ${_conversas.length}");
     //print(_conversas);
     //print("fim das conversas");
-    return "";
+    return errorMessage;
   }
 
   
 
   Future<String> sendMessage(Conversa conv ,Mensagem msg)async 
   {
-    print("sending message on chatProvider");
+    print("sending message ${msg.texto} on chatProvider");
     print(conv.id);
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final association = <String, dynamic>{
+        "emissor": msg.from.numero,
+        "envio": Timestamp.fromDate(msg.sent),
+        "texto":msg.texto
+      };
+    print(association);
+    db.collection("Conversas").doc(conv.id).collection("Mensagens").add(association).then((value){print("enviado?");});//parei aqui?
 
+    notify("send", 1, conv.id);
     return "";
   }
 
+  //##########
+  //notificando os dependentes
+  //##########
+
+  notify(String operation, int res, String chatId) async {
+    print("chat provider is notifyng");
+    if (!_controller!.isClosed) _controller?.sink.add([operation, res, chatId]);
+  }
+
+  Stream get stream {
+    _controller ??= StreamController.broadcast();
+    return _controller!.stream;
+  }
+
+  dispose() {
+    if (_controller != null) {
+      if (!_controller!.hasListener) {
+        print(
+            "closgin stream===============================================================================");
+        _controller!.close();
+        _controller = null;
+      }
+    }
+  }
+
+  static StreamController? _controller;
 }
