@@ -6,10 +6,10 @@ import 'user.dart';
 
 class Conversa
 {
-  String id;
+  String id="-1";
   User User1;
   User User2;
-  
+  bool is_firebase_synced = true;
   List<Mensagem> mensagens = [];
 
   Conversa(this.User1, this.User2, {this.id="-1",this.mensagens =const []})

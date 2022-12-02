@@ -33,12 +33,22 @@ class ContatoTile extends StatelessWidget {
         title: Text(cont.apelido),
         subtitle: Text("#${cont.numero}"),
         trailing: IconButton(
-          onPressed: () {
+          onPressed: () async {
+            print("procurando contato");
+            var chat = await iniciarConversaCom(cont.numero);
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (BuildContext ctx) {
-              //return ChatScreen(User(cont.apelido, cont.numero));
-              //TODO REFAZER ESSA FEATURE
-              return Text("TODO: LEMBRAR DE REFAZER ESSA FEATURE");
+              if (chat != null) {
+                return ChatWith(chat);
+              } else {
+                print("contato inexistente");
+                return Scaffold(
+                  appBar: AppBar(
+                  title: const Text("usuárioo inexistente"),
+                  
+                ),
+                body: const Center(child: Text("usuárioo inexistente")),);
+              }
             }));
           },
           icon: const Icon(Icons.chat),
@@ -103,7 +113,8 @@ class ContactOptions extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context);
                           Navigator.pop(context);
-                          BlocProvider.of<ContactBloc>(context).add(ContactDeleteEvent(cont));
+                          BlocProvider.of<ContactBloc>(context)
+                              .add(ContactDeleteEvent(cont));
                         },
                         child: const Text("Sim"),
                       ),
@@ -128,7 +139,10 @@ class EditContato extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("novo contato"), elevation: 0,),
+      appBar: AppBar(
+        title: const Text("novo contato"),
+        elevation: 0,
+      ),
       body: Container(
         margin: const EdgeInsets.all(15.0),
         padding: const EdgeInsets.all(3.0),
@@ -191,8 +205,9 @@ class EditContato extends StatelessWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    aux.id=cont.id;
-                    BlocProvider.of<ContactBloc>(context).add(ContactEditEvent(aux));
+                    aux.id = cont.id;
+                    BlocProvider.of<ContactBloc>(context)
+                        .add(ContactEditEvent(aux));
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                     onFinish();

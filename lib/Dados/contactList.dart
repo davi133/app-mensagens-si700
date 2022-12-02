@@ -61,7 +61,6 @@ class ContactDataProvider {
   }
 
   Future<List<Contato>> getContacts() async {
-    await Future.delayed(const Duration(seconds: 1));
     Database db = await database;
     List<Map<String, Object?>> noteMapList =
         await db.rawQuery("SELECT * FROM $tableName WHERE $owner = ${AuthenticationProvider.helper.user.numero};");

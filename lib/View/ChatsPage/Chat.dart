@@ -8,11 +8,40 @@ import '../../Dados/contactList.dart';
 import '../../model/contato.dart';
 import '../../model/user.dart';
 import '../../model/Conversa.dart';
-
+import '../../Dados/auth_provider.dart';
 import '../../model/mensagem.dart';
+
+Future<Conversa?> iniciarConversaCom(int numero) async
+{
+
+   User me = User(AuthenticationProvider.helper.user.nome,AuthenticationProvider.helper.user.numero);
+  print("procurando contato no provider");
+  User? other_n = await AuthenticationProvider.getUserByNumber(numero);
+  User other = User("-1", -1);
+  if (other_n != null)
+  {
+    other = other_n;
+  }
+  else
+  {
+    print("o usuário não foi encontrado");
+    return null;
+  }
+  Conversa nova;
+  if (me.numero < other.numero)
+  {
+    nova = Conversa(me, other);
+  }
+  else{
+    nova = Conversa(other, me);
+  }
+  return nova;
+
+}
 
 class ChatWith extends StatelessWidget {
   const ChatWith(this.conversa, {super.key});
+ 
   final Conversa conversa;
   @override
   Widget build(BuildContext context) {

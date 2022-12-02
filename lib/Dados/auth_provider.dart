@@ -157,11 +157,19 @@ class AuthenticationProvider {
       FirebaseFirestore db = FirebaseFirestore.instance;
     //var chatDocs = db.collection('Conversas').where('users',arrayContains: AuthenticationProvider.helper.user.numero);
     var usersNumbers = db.collection('users-numbers').where('number',isEqualTo: number).get();
-    Model.User user = Model.User("-1", -1);
+    Model.User? user;
     await usersNumbers.then((value) {
-      var dat = value.docs[0].data();
+      if (value.docs.length >0)
+      {
+         var dat = value.docs[0].data();
       //print('auth data is ${value.docs[0].data()}');
       user = Model.User.fromMap(dat);
+      }
+      else
+      {
+        user = null;
+      }
+     
       //print(user);
     });
 

@@ -21,16 +21,13 @@ class ChatProvider {
     return _conversas;
   }
 
-  void _addConversaToCached(Conversa conv)
-  {
-    for( int i =0; i< _conversas.length; i++)
-    {
-      if (_conversas[i].id == conv.id)
-      {
+  void _addConversaToCached(Conversa conv) {
+    for (int i = 0; i < _conversas.length; i++) {
+      if (_conversas[i].id == conv.id) {
         return;
       }
     }
-    
+
     _conversas.add(conv);
     //print("conversa adicionada pelo _handler");
     //print(conv);
@@ -42,73 +39,72 @@ class ChatProvider {
     String errorMessage = "";
     var chatDocs = db
         .collection('Conversas')
-        .where('users',
-            arrayContains: AuthenticationProvider.helper.user.numero)
-        .snapshots(includeMetadataChanges: false);
+        .snapshots();
 
     chatDocs.listen((value) async {
       //iterando todos os chats
       //print("starting to listen for all chats");
-      _conversas = [];
-      for (var chat in value.docs) {
-        User? user1_aux = await AuthenticationProvider.getUserByNumber(
-            chat.data()['users'][0]);
-        User user1;
+      for (var chat in value.docChanges) {
+        var dat = chat.doc.data();
+        int me_number = AuthenticationProvider.helper.user.numero;
+        
+        if (dat!=null &&(me_number == dat['users'][0]  || me_number == dat['users'][1]) ){ 
+        if (chat.type == DocumentChangeType.added || chat.type == DocumentChangeType.modified) {
+          User? user1_aux =
+              await AuthenticationProvider.getUserByNumber(dat['users'][0]);
+          User user1;
 
-        User? user2_aux = await AuthenticationProvider.getUserByNumber(
-            chat.data()['users'][1]);
-        User user2;
+          User? user2_aux =
+              await AuthenticationProvider.getUserByNumber(dat['users'][1]);
+          User user2;
 
-        if (user1_aux != null && user2_aux != null) {
-          user1 = user1_aux;
-          //print("user1 $user1");
-          user2 = user2_aux;
-          //print("user2 $user2");
-          Conversa conv = Conversa(user1_aux, user2, id: chat.id);
-          var msgs = chat.reference
-              .collection("Mensagens")
-              .orderBy('envio', descending: false)
-              .snapshots(includeMetadataChanges: false);
+          if (user1_aux != null && user2_aux != null) {
+            user1 = user1_aux;
+            //print("user1 $user1");
+            user2 = user2_aux;
+            //print("user2 $user2");
+            Conversa conv = Conversa(user1_aux, user2, id: chat.doc.id);
+            var msgs = chat.doc.reference
+                .collection("Mensagens")
+                .orderBy('envio', descending: false)
+                .snapshots(includeMetadataChanges: false);
 
-          msgs.listen((value) {
-            //iterando todas as mensagens
-            //print("starting to listen for mensagens");
-            //print("==================================================\nconversa anntes era is: $conv");
-            value.docChanges[0].doc.data();
-            value.docs[0].data();
-            for (var msg in value.docChanges) {
-              var dat = msg.doc.data();
-              if (msg.type == DocumentChangeType.added && dat!=null)
-              {
-                User emissor;
-              if (dat['emissor'] == user1.numero) {
-                emissor = user1;
-              } else {
-                emissor = user2;
+            msgs.listen((value) {
+              //iterando todas as mensagens
+              //print("starting to listen for mensagens");
+              //print("==================================================\nconversa anntes era is: $conv");
+              value.docChanges[0].doc.data();
+              value.docs[0].data();
+              for (var msg in value.docChanges) {
+                var dat = msg.doc.data();
+                if (msg.type == DocumentChangeType.added && dat != null) {
+                  User emissor;
+                  if (dat['emissor'] == user1.numero) {
+                    emissor = user1;
+                  } else {
+                    emissor = user2;
+                  }
+
+                  Timestamp t = dat['envio'] as Timestamp;
+                  //print("enviod é: ${msg.data()['envio']}");
+                  DateTime date = t.toDate();
+                  var mensag = Mensagem(emissor, dat['texto']);
+                  mensag.sent = date;
+                  conv.addMensagem(mensag);
+                  //print("adding message: $mensag to ${conv.id}");
+                }
               }
-              
-              Timestamp t = dat['envio'] as Timestamp;
-              //print("enviod é: ${msg.data()['envio']}");
-              DateTime date = t.toDate();
-              var mensag = Mensagem(emissor, dat['texto']);
-              mensag.sent = date;
-              conv.addMensagem(mensag);
-              //print("adding message: $mensag to ${conv.id}");
-              }
-              
-            }
-            _addConversaToCached(conv);
-            //print("==================================================\nfinal conversa is: $conv");
-            
-            
-            
-            notify("fetch", 1, "");
-          }, onError: (e) {
-            errorMessage = "$e";
-          });
-          //print("adding to conversas");
+              _addConversaToCached(conv);
+              //print("==================================================\nfinal conversa is: $conv");
 
-        }
+              notify("fetch", 1, "");
+            }, onError: (e) {
+              errorMessage = "$e";
+            });
+            //print("adding to conversas");
+
+          }
+        }}
       }
     }, onError: (e) {
       errorMessage = "$e";
@@ -120,6 +116,12 @@ class ChatProvider {
   Future<String> sendMessage(Conversa conv, Mensagem msg) async {
     //print("sending message ${msg.texto} on chatProvider");
     //print(conv.id);
+
+    if (conv.id == "-1") {
+      await iniciarConversaCom(conv);
+      conv.is_firebase_synced = false;
+    }
+
     FirebaseFirestore db = FirebaseFirestore.instance;
     final association = <String, dynamic>{
       "emissor": msg.from.numero,
@@ -127,20 +129,32 @@ class ChatProvider {
       "texto": msg.texto
     };
     //print(association);
-    db
+    await db
         .collection("Conversas")
         .doc(conv.id)
         .collection("Mensagens")
         .add(association)
         .then((value) {
       //print("enviado?");
-    }); 
+    });
+    if (!conv.is_firebase_synced)
+    {
+      conv.addMensagem(msg);
+    }
 
     notify("send", 1, conv.id);
     return "";
   }
 
- 
+  Future<void> iniciarConversaCom(Conversa conv) async {
+    conv.id = "${conv.User1.numero}-${conv.User2.numero}";
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final association = <String, dynamic>{
+      "users": [conv.User1.numero, conv.User2.numero]
+    };
+    db.collection("Conversas").doc(conv.id).set(association);
+    _addConversaToCached(conv);
+  }
 
   //##########
   //notificando os dependentes
