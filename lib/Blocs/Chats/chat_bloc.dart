@@ -12,12 +12,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState>
       print('sending message on bloc');
       await ChatProvider.helper.sendMessage(event.conv,event.msg);
       print("sim, enviado");
-      emit(ChatLoadedState());
+      //emit(ChatLoadedState());
     },);
     
     on<ChatRecieveMessageEvent>((event, emit) {
       
     },);
+
+    on<ChatRefreshEvent>((event, emit) {
+      emit(ChatLoadedState());
+    },);
+
+     ChatProvider.helper.stream.listen((event) {
+      if (event[0] == "send" || event[0]=="fetch") {
+        add(ChatRefreshEvent());
+      }
+    });
   }
 
 }

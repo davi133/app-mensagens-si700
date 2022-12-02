@@ -40,8 +40,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     Conversa conv = widget.conversa;
-    print("conversa é");
-    print(conv);
     User me;
     User other;
     int me_num = AuthenticationProvider.helper.user.numero;
@@ -225,7 +223,7 @@ class _ChatBottomState extends State<ChatBottom> {
                   newMsgController.text = "";
                   BlocProvider.of<ChatBloc>(context)
                       .add(ChatSendMessageEvent(widget.conv, msg));
-                  widget.conv.addMensagem(msg);
+                  //widget.conv.mensagens.add(msg);
                   FocusManager.instance.primaryFocus?.unfocus();
                 }
               },

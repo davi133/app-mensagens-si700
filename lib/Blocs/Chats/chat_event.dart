@@ -16,3 +16,8 @@ class ChatRecieveMessageEvent extends ChatEvent
 {
   
 }
+
+class ChatRefreshEvent extends ChatEvent
+{
+  
+}

@@ -10,11 +10,11 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
       (event, emit) async {
         print("fetching chat list");
         String res = await ChatProvider.helper.fetchChats();
-        if (res == "") {
+       /* if (res == "") {
           emit(ChatListLoadedState(ChatProvider.helper.Conversas));
         } else {
           emit(ChatListErrorState(res));
-        }
+        }*/
         print("chat fetchin done");
       },
     );
@@ -31,9 +31,12 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     );
 
     ChatProvider.helper.stream.listen((event) {
-      if (event[0] == "send") {
+      if (event[0] == "send" || event[0]=="fetch") {
         add(ChatListRefreshEvent());
       }
     });
+
   }
+
+  
 }
