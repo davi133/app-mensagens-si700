@@ -21,6 +21,10 @@ class TelaConversas extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ChatListLoadedState) {
           List<Conversa> chats = state.conversas;
+          if (chats.isEmpty)
+          {
+            return const Center(child:Text("Você ainda não começou nenhuma conversa"));
+          }
           return ListView.builder(
             itemCount: chats.length,
             itemBuilder: (BuildContext context, int index) {

@@ -129,6 +129,7 @@ class ChatProvider {
 
     if (conv.id == "-1") {
       await iniciarConversaNoDb(conv);
+      conv.mensagens.add(msg);
     }
 
     FirebaseFirestore db = FirebaseFirestore.instance;
