@@ -25,7 +25,7 @@ class TelaContatos extends StatelessWidget {
         } else if (state is ContactLoaded) {
           return ListaContatos(contatos: state.lista_de_contatos);
         } else {
-          return const Center(child: Text("Você não tem contatos"));
+          return const EmptyList();
         }
       }),
     );
@@ -85,6 +85,32 @@ class _ListaContatosState extends State<ListaContatos> {
           )
         ],
       ),
+    );
+  }
+}
+
+class EmptyList extends StatelessWidget {
+  const EmptyList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        const Text("Você não tem contatos"),
+        Container(
+          height: 20,
+        ),
+        ElevatedButton(
+          child: const Text("Cadastrar"),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+              return NewContactScreen(BlocProvider.of<ContactBloc>(context));
+            }));
+          },
+        ),
+      ]),
     );
   }
 }
