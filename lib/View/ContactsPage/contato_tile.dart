@@ -44,10 +44,10 @@ class ContatoTile extends StatelessWidget {
                 print("contato inexistente");
                 return Scaffold(
                   appBar: AppBar(
-                  title: const Text("usuárioo inexistente"),
+                  title: const Text("usuário inexistente"),
                   
                 ),
-                body: const Center(child: Text("usuárioo inexistente")),);
+                body: const Center(child: Text("usuário inexistente")),);
               }
             }));
           },
