@@ -18,7 +18,8 @@ class AuthenticationProvider {
     return _user;
   }
 
-  Future<SessionUser> Login({required String email, required String senha}) async {
+  Future<String> Login({required String email, required String senha}) async {
+    String resMessage="";
     try {
       UserCredential a = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: senha);
@@ -37,7 +38,7 @@ class AuthenticationProvider {
       var db = FirebaseFirestore.instance;
       int number =-1;
       var lastNumberDoc = db.collection("users-numbers").doc(uid);
-      print("got doc ${lastNumberDoc.id}");
+      //print("got doc ${lastNumberDoc.id}");
 
       await lastNumberDoc
         .get().then(
@@ -47,32 +48,30 @@ class AuthenticationProvider {
             
             number = data["number"];
           },
-          onError: (e) => print("Error getting document: $e"),
+          onError: (e) => resMessage = "Usuário ou senha incorretos",
         );
-        print("got number");
+        //print("got number");
 
       _user = SessionUser(nome: name, email: email, numero: number);
-      print(_user);
-      return _user;
+      //print(_user);
+      return resMessage;
     } on FirebaseAuthException catch (e) {
-      print("erro firebase: ");
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        return 'The account already exists for that email.';
       } else {
-        print(e.message);
+        //return "${e.message}";
+        return "Email adress or password are incorrect";
       }
     } catch (e) {
-      print("erro geral ${e.toString()}");
+      return "erro geral ${e.toString()}";
     }
 
-    _user = SessionUser(nome: "a", email: ".", numero: -1);
-    print(_user);
-    return _user;
   }
 
-  Future<SessionUser> SignIn({required String email,required String nome,required String senha}) async {
+  Future<String> SignIn({required String email,required String nome,required String senha}) async {
+    String resMessage = "";
     try {
 
       //creating user with firebase auth
@@ -119,25 +118,21 @@ class AuthenticationProvider {
 
       _user =
           SessionUser(nome: nome, email: email, numero: association["number"]);
-      print(_user);
-      return _user;
+      return resMessage;
       //CATCHES ===========================================================================================================================
     } on FirebaseAuthException catch (e) {
-      print("erro firebase: ");
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+         return 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+         return 'The account already exists for that email.';
       } else {
-        print(e.message);
+        return "${e.message}";
       }
     } catch (e) {
-      print("erro geral ${e.toString()}");
+      return ("erro geral ${e.toString()}");
     }
 
-    _user = SessionUser(nome: "name", email: ".", numero: -1);
-    print(_user);
-    return _user;
+
   }
 
   Future<int> Logout() async {

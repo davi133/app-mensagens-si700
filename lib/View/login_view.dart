@@ -10,12 +10,31 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginView extends StatelessWidget {
-  LoginView({super.key});
+  LoginView({super.key, this.email = "", this.message = ""});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _email = "";
-  String _senha = "";
+  String email = "";
+  String senha = "";
+  String message;
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (message != "") {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text(message),
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Ok"))
+                ],
+              );
+            });
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text("Entrar"),
@@ -34,6 +53,7 @@ class LoginView extends StatelessWidget {
                   //TEXT FIELD ===========================================
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    initialValue: email,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                     ),
@@ -47,7 +67,7 @@ class LoginView extends StatelessWidget {
                     },
                     onSaved: (String? inValue) {
                       if (inValue != null) {
-                        _email = inValue;
+                        email = inValue;
                       }
                     },
                   ),
@@ -68,7 +88,7 @@ class LoginView extends StatelessWidget {
                     },
                     onSaved: (String? inValue) {
                       if (inValue != null) {
-                        _senha = inValue;
+                        senha = inValue;
                       }
                     },
                   ),
@@ -84,16 +104,11 @@ class LoginView extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            //print("form login");
+                            print("enviando login event");
                             BlocProvider.of<AuthBloc>(context)
-                                .add(LoginEvent(email: _email, senha: _senha));
+                                .add(LoginEvent(email: email, senha: senha));
                           }
                           FocusManager.instance.primaryFocus?.unfocus();
-
-                          /*Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (_) {
-                            return const Home();
-                          }));*/
                         },
                       ),
                       Container(
@@ -103,24 +118,11 @@ class LoginView extends StatelessWidget {
                       ElevatedButton(
                         child: const Text("Cadastrar"),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return SigninView(
-                                    ab: BlocProvider.of<AuthBloc>(context));
-                              },
-                            ),
-                          );
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(StartRegisterEvent());
                         },
                       ),
-                      //BOTÃO DE teste ========================================================================
-                      ElevatedButton(
-                        child: const Text("teste"),
-                        onPressed: () async {
-                          print("sadasdasdad ========== teste ============ asdasdasdasdad");
-                          ChatProvider.helper.fetchChats();
-                        },
-                      ),
+                     
                     ],
                   )
                 ],

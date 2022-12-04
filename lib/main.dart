@@ -1,3 +1,6 @@
+import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
+import 'package:UnitalkV0_2/View/signin_view.dart';
+
 import 'Blocs/Authentication/auth_bloc.dart';
 import 'Blocs/Authentication/auth_state.dart';
 import 'model/session_user.dart';
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthBloc(UnauthenticatedState()),
+      create: (context) => AuthBloc(OnLoginState()),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'WhatsApp 2',
@@ -44,9 +47,14 @@ class Wrapper extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: BlocProvider.of<AuthBloc>(context),
       builder: ((context, state) {
-        if (state is UnauthenticatedState) {
-          return LoginView();
-        } else {
+        if (state is OnLoginState) {
+          return LoginView(email: state.email,message: state.message,);
+        } 
+        else if (state is OnRegisterState)
+        {
+          return SigninView(email: state.email,nome: state.nome,message: state.message,);
+        }
+        else {
           return const Home();
         }
       }),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_bloc.dart';
 import 'package:UnitalkV0_2/Blocs/Authentication/auth_event.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +7,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Home.dart';
 
 class SigninView extends StatelessWidget {
-  SigninView({super.key, required this.ab});
-  AuthBloc ab;
+  SigninView({super.key, this.email = "", this.nome = "", this.message = ""});
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String _nome ="";
-  String _email ="";
-  String _senha = "";
+  String nome = "";
+  String email = "";
+  String senha = "";
+  String message = "";
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (message != "") {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return SimpleDialog(
+                title: Text(message),
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Ok"))
+                ],
+              );
+            });
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text("Cadastrar"),
@@ -31,6 +52,7 @@ class SigninView extends StatelessWidget {
                   //TEXT FIELD ===========================================
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    initialValue: nome,
                     decoration: const InputDecoration(
                       labelText: 'Nome',
                     ),
@@ -43,15 +65,15 @@ class SigninView extends StatelessWidget {
                       return null;
                     },
                     onSaved: (String? inValue) {
-                       if (inValue != null)
-                      {
-                        _nome = inValue;
+                      if (inValue != null) {
+                        nome = inValue;
                       }
                     },
                   ),
                   //TEXT FIELD ===========================================
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    initialValue: email,
                     decoration: const InputDecoration(
                       labelText: 'Email',
                     ),
@@ -64,9 +86,8 @@ class SigninView extends StatelessWidget {
                       return null;
                     },
                     onSaved: (String? inValue) {
-                       if (inValue != null)
-                      {
-                        _email = inValue;
+                      if (inValue != null) {
+                        email = inValue;
                       }
                     },
                   ),
@@ -86,9 +107,8 @@ class SigninView extends StatelessWidget {
                       return null;
                     },
                     onSaved: (String? inValue) {
-                      if (inValue != null)
-                      {
-                        _senha = inValue;
+                      if (inValue != null) {
+                        senha = inValue;
                       }
                     },
                   ),
@@ -96,21 +116,36 @@ class SigninView extends StatelessWidget {
                     height: 30,
                   ),
                   //BOTÃO ===============================================
-                  ElevatedButton(
-                    child: const Text("Cadastrar"),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        print("form signin");
-                        _formKey.currentState!.save();
-                        ab.add(SignInEvent(email: _email, nome: _nome, senha: _senha));
-                      }
-                      Navigator.of(context).pop();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      /*Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (_) {
-                        return const Home();
-                      }));*/
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: const Text("Voltar"),
+                        onPressed: () {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(StartLoginEvent());
+                        },
+                      ),
+                      Container(
+                        width: 20,
+                      ),
+                      ElevatedButton(
+                        child: const Text("Cadastrar"),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            print("form signin");
+                            BlocProvider.of<AuthBloc>(context).add(SignInEvent(
+                                email: email, nome: nome, senha: senha));
+                          }
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          /*Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (_) {
+                            return const Home();
+                          }));*/
+                        },
+                      ),
+                    ],
                   )
                 ],
               ),

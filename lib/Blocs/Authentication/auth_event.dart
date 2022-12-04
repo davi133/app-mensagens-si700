@@ -2,6 +2,12 @@ import '../../model/session_user.dart';
 
 abstract class AuthEvent{}
 
+class StartLoginEvent extends AuthEvent
+{
+  
+}
+
+
 class LoginEvent extends AuthEvent
 {
   String email="";
@@ -9,7 +15,7 @@ class LoginEvent extends AuthEvent
   LoginEvent({required this.email,required this.senha});
 }
 
-class LoginAnonymousEvent extends AuthEvent
+class StartRegisterEvent extends AuthEvent
 {
   
 }

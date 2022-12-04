@@ -2,19 +2,28 @@ import '../../model/session_user.dart';
 
 abstract class AuthState{}
 
-class UnauthenticatedState extends AuthState
-{
 
+
+class OnLoginState extends AuthState
+{
+  String message;
+  String email;
+
+  OnLoginState({this.message="",this.email=""});
+}
+
+class OnRegisterState extends AuthState
+{
+  String message;
+  String nome;
+  String email;
+
+
+  OnRegisterState({this.message="",this.nome="",this.email=""});
 }
 
 class AuthenticatedState extends AuthState
 {
-  SessionUser sessionUser;
-  AuthenticatedState({required this.sessionUser});
+ 
 }
 
-class AuthErroState extends AuthState
-{
-  final String message;
-  AuthErroState(this.message);
-}

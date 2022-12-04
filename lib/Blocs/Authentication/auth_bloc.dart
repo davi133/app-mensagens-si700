@@ -10,35 +10,49 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
   AuthBloc(AuthState initialState) : super(initialState)
   {
+    on<StartLoginEvent>((event, emit) {
+      emit(OnLoginState());
+    },);
+
     on<LoginEvent>((event, emit) async {
-      //print("auth bloc login");
-      _user = await AuthenticationProvider.helper.Login(email: event.email,senha: event.senha);
-      if (_user.numero != -1)
+      print("tentando logar como ${event.email} e ${event.senha}");
+      String message  = await AuthenticationProvider.helper.Login(email: event.email,senha: event.senha);
+      print("message is $message");
+      if (message=="")
       {
-        emit(AuthenticatedState(sessionUser: _user));
+        emit(AuthenticatedState());
       }
-      
-      
-        
+      else
+      {
+        emit(OnLoginState(email: event.email,message: message));
+      }
     });
     
+    on<StartRegisterEvent>((event, emit) {
+      emit(OnRegisterState());
+    },);
+
+
     on<SignInEvent>((event, emit)async {
-      print("bloc signin");
-      _user = await AuthenticationProvider.helper.SignIn(email: event.email,nome: event.nome, senha: event.senha);
-       if (_user.numero != -1)
+      print("tentando logar como ${event.nome} ${event.email} e ${event.senha}");
+      String message = await AuthenticationProvider.helper.SignIn(email: event.email,nome: event.nome, senha: event.senha);
+      print("message is $message");
+      if (message=="")
       {
-        emit(AuthenticatedState(sessionUser: _user));
+        emit(AuthenticatedState());
       }
+      else
+      {
+        emit(OnRegisterState(email: event.email, nome: event.nome,message: message));
+      }
+
     },);
     
-    /*on<LoginAnonymousEvent>((event, emit) {
-      //emit(AuthenticatedState( sessionUser:  SessionUser(email: "anon@email.com",nome: "Anonimo",numero: -69)));
-    },);*/
     
     on<LogoutEvent>((event, emit) async {
       _user = SessionUser(nome: "...", email: "...", numero: -1);
       await AuthenticationProvider.helper.Logout();
-      emit(UnauthenticatedState());
+      emit(OnLoginState());
     },);
   }
   
