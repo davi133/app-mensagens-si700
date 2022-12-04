@@ -31,7 +31,7 @@ class ChatListBloc extends Bloc<ChatListEvent, ChatListState> {
     );
 
     ChatProvider.helper.stream.listen((event) {
-      if (event[0] == "send" || event[0]=="fetch") {
+      if (event[0] == "received" || event[0]=="newChat") {
         add(ChatListRefreshEvent());
       }
     });

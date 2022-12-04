@@ -117,7 +117,7 @@ class LoginView extends StatelessWidget {
                       ElevatedButton(
                         child: const Text("teste"),
                         onPressed: () async {
-                          print("sadasdasdad");
+                          print("sadasdasdad ========== teste ============ asdasdasdasdad");
                           ChatProvider.helper.fetchChats();
                         },
                       ),

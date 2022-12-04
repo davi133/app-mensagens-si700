@@ -24,102 +24,111 @@ class ChatProvider {
   void _addConversaToCached(Conversa conv) {
     for (int i = 0; i < _conversas.length; i++) {
       if (_conversas[i].id == conv.id) {
+        _conversas[i] = conv;
+        notify("received",1,conv.id);
         return;
       }
     }
-
     _conversas.add(conv);
-    //print("conversa adicionada pelo _handler");
-    //print(conv);
+    notify("newChat",1,conv.id);
   }
-
-  //retrieve all chats
+  
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? subs;
+  List<StreamSubscription<QuerySnapshot<Map<String, dynamic>>>?> subsChats = [];
+  //bool waitingToPrint = false;
   Future<String> fetchChats() async {
+    //print("====================testRealTime====================");
     FirebaseFirestore db = FirebaseFirestore.instance;
     String errorMessage = "";
-    var chatDocs = db
-        .collection('Conversas')
-        .snapshots();
+    var chatDocs = db.collection('Conversas').where('users',arrayContains: AuthenticationProvider.helper.user.numero).snapshots();
 
-    chatDocs.listen((value) async {
-      //iterando todos os chats
-      //print("starting to listen for all chats");
-      for (var chat in value.docChanges) {
-        var dat = chat.doc.data();
-        int me_number = AuthenticationProvider.helper.user.numero;
+    subs?.cancel();
+
+    subs = chatDocs.listen((event) async {
+      _conversas = [];
+      //print("algo mudou nas conversas ++++++++++++++++++++++++++++++++++++++");
+      //print(event.size);
+      for (var sub in subsChats)
+      {
+      sub?.cancel();
+      }
+      for (var chat in event.docs) {
         
-        if (dat!=null &&(me_number == dat['users'][0]  || me_number == dat['users'][1]) ){ 
-        if (chat.type == DocumentChangeType.added || chat.type == DocumentChangeType.modified) {
-          User? user1_aux =
-              await AuthenticationProvider.getUserByNumber(dat['users'][0]);
-          User user1;
+        User? u1null = await AuthenticationProvider.getUserByNumber(
+            chat.data()['users'][0]);
+        User? u2null = await AuthenticationProvider.getUserByNumber(
+            chat.data()['users'][1]);
 
-          User? user2_aux =
-              await AuthenticationProvider.getUserByNumber(dat['users'][1]);
-          User user2;
+        if (u1null != null && u2null != null) {
+          Conversa conv = Conversa(u1null, u2null, id: chat.id);
+          int u1ID = chat.data()['users'][0];
+          int u2ID = chat.data()['users'][1];
 
-          if (user1_aux != null && user2_aux != null) {
-            user1 = user1_aux;
-            //print("user1 $user1");
-            user2 = user2_aux;
-            //print("user2 $user2");
-            Conversa conv = Conversa(user1_aux, user2, id: chat.doc.id);
-            var msgs = chat.doc.reference
-                .collection("Mensagens")
-                .orderBy('envio', descending: false)
-                .snapshots(includeMetadataChanges: false);
+          var thisChat = chat.reference.collection("Mensagens").orderBy('envio', descending: false).snapshots();
 
-            msgs.listen((value) {
-              //iterando todas as mensagens
-              //print("starting to listen for mensagens");
-              //print("==================================================\nconversa anntes era is: $conv");
-              value.docChanges[0].doc.data();
-              value.docs[0].data();
-              for (var msg in value.docChanges) {
-                var dat = msg.doc.data();
-                if (msg.type == DocumentChangeType.added && dat != null) {
+          var esseChatSub = thisChat.listen((event) async
+          {
+            conv.mensagens = [];
+            if (event.size > 0)
+            {
+              //print("mudança de mensagens --------------------");
+              for (var msg in event.docs)
+              {
+                //if (dat != null && msg.type == DocumentChangeType.added)
+                
                   User emissor;
-                  if (dat['emissor'] == user1.numero) {
-                    emissor = user1;
-                  } else {
-                    emissor = user2;
+                  if (msg.data()['emissor'] == u1ID)
+                  {
+                    emissor = conv.User1;
+                  }
+                  else
+                  {
+                    emissor = conv.User2;
                   }
 
-                  Timestamp t = dat['envio'] as Timestamp;
-                  //print("enviod é: ${msg.data()['envio']}");
+                  Timestamp t = msg.data()['envio'] as Timestamp;
                   DateTime date = t.toDate();
-                  var mensag = Mensagem(emissor, dat['texto']);
+                  var mensag = Mensagem(emissor,msg.data()['texto']);
                   mensag.sent = date;
                   conv.addMensagem(mensag);
-                  //print("adding message: $mensag to ${conv.id}");
-                }
+                
+                
+              
               }
-              _addConversaToCached(conv);
-              //print("==================================================\nfinal conversa is: $conv");
-
-              notify("fetch", 1, "");
-            }, onError: (e) {
-              errorMessage = "$e";
-            });
-            //print("adding to conversas");
-
+              
+            }
+            _addConversaToCached(conv);
+            /*await Future.delayed(const Duration(seconds: 1));
+            if (!waitingToPrint)
+            {
+              //print("lista de test depois de MENSAGEM é: ");
+              //print(conv_test);
+            }*/
+           
           }
-        }}
+          ,onError:  (e){errorMessage="$e";});
+          subsChats.add(esseChatSub);
+          
+        }
       }
-    }, onError: (e) {
-      errorMessage = "$e";
-    });
+      //print("fim da mudança");
+      
+      //waitingToPrint = true;
+      //await Future.delayed(const Duration(seconds: 3));
+      //waitingToPrint = false;
+      //print("lista de test é: ");
+      //print(conv_test);
+    }, onError: (e){errorMessage="$e";});
 
     return errorMessage;
   }
-
+ 
   Future<String> sendMessage(Conversa conv, Mensagem msg) async {
     //print("sending message ${msg.texto} on chatProvider");
     //print(conv.id);
 
     if (conv.id == "-1") {
-      await iniciarConversaCom(conv);
-      conv.is_firebase_synced = false;
+      await iniciarConversaNoDb(conv);
     }
 
     FirebaseFirestore db = FirebaseFirestore.instance;
@@ -137,16 +146,12 @@ class ChatProvider {
         .then((value) {
       //print("enviado?");
     });
-    if (!conv.is_firebase_synced)
-    {
-      conv.addMensagem(msg);
-    }
 
-    notify("send", 1, conv.id);
+    //notify("", 1, conv.id);
     return "";
   }
 
-  Future<void> iniciarConversaCom(Conversa conv) async {
+  Future<void> iniciarConversaNoDb(Conversa conv) async {
     conv.id = "${conv.User1.numero}-${conv.User2.numero}";
     FirebaseFirestore db = FirebaseFirestore.instance;
     final association = <String, dynamic>{
@@ -155,6 +160,22 @@ class ChatProvider {
     db.collection("Conversas").doc(conv.id).set(association);
     _addConversaToCached(conv);
   }
+
+  List<Conversa> conv_test = [];
+  void _addConversaToTest(Conversa conv) {
+    for (int i = 0; i < conv_test.length; i++) {
+      if (conv_test[i].id == conv.id) {
+        conv_test[i] = conv;
+        //print("mensagem adicionada");
+        return;
+      }
+    }
+    //print("conversa adicionada");
+    conv_test.add(conv);
+    //notificar
+  }
+
+  
 
   //##########
   //notificando os dependentes
@@ -171,6 +192,12 @@ class ChatProvider {
   }
 
   dispose() {
+
+    subs?.cancel();
+    for (var sub in subsChats)
+    {
+      sub?.cancel();
+    }
     if (_controller != null) {
       if (!_controller!.hasListener) {
         //print("closgin stream===============================================================================");
