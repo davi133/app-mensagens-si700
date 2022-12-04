@@ -11,17 +11,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'View/login_view.dart';
 import 'View/Home.dart';
 import 'package:bloc/bloc.dart';
-import 'router.dart';
+//import 'router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyAjBwEi8NxghGQ6Nt6enL5FUhMQaMlpXZU",
+  authDomain: "unitalk-a0fa6.firebaseapp.com",
+  databaseURL: "https://unitalk-a0fa6-default-rtdb.firebaseio.com",
+  projectId: "unitalk-a0fa6",
+  storageBucket: "unitalk-a0fa6.appspot.com",
+  messagingSenderId: "195591691837",
+  appId: "1:195591691837:web:7e126a69617c423cb71454"
+      )
+  );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  final AppRouter _appRouter = AppRouter();
+  //final AppRouter _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -61,3 +71,8 @@ class Wrapper extends StatelessWidget {
     );
   }
 }
+
+
+
+//Davi Pereira Bergamin - 169753
+//Felipe Araujo Santos Pinto - 169401

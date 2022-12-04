@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:UnitalkV0_2/Dados/auth_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -46,12 +45,12 @@ class ContactDataProvider {
     """);
 
     db.insert(tableName,
-        Contato("Felipe Araujo Santos Pinto", 169401, id: 0).toMap(ownerId: 1001));
+        Contato("Felipe Araujo Santos Pinto", 1002, id: 0).toMap(ownerId: 1001));
     db.insert(
-        tableName, Contato("Davi Pereira Bergamin", 169753, id: 1).toMap(ownerId: 1001));
-    db.insert(tableName, Contato("Joao", 1003, id: 2).toMap(ownerId: 1001));
-    db.insert(tableName, Contato("Pedro", 1004, id: 3).toMap(ownerId: 1001));
-    db.insert(tableName, Contato("Ulisses", 1010).toMap(ownerId: 1001));
+        tableName, Contato("Davi Pereira Bergamin", 1001, id: 1).toMap(ownerId: 1001));
+    //db.insert(tableName, Contato("Joao", 1003, id: 2).toMap(ownerId: 1001));
+    //db.insert(tableName, Contato("Pedro", 1004, id: 3).toMap(ownerId: 1001));
+    //db.insert(tableName, Contato("Ulisses", 1010).toMap(ownerId: 1001));
   }
 
   Future<void> _deleteDatabase() async {
@@ -86,7 +85,7 @@ class ContactDataProvider {
         await db.rawQuery("SELECT * FROM $tableName where $numero=$number;");
     Contato cont = Contato.fromMap(noteMapList[0]);
 
-    //TODO: is it working? maybe, I will not test it today
+    
     return cont;
   }*/
 

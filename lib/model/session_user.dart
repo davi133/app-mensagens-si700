@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
-
 class SessionUser{
   final String nome;
   final int numero;
