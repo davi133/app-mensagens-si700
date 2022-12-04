@@ -71,7 +71,7 @@ class ContactDataProvider {
   }
 
   Future<int> addContato(Contato cont) async {
-    //TODO consertar contatos duplicados?
+    
     Database? db = await database;
     int res = await db.insert(tableName, cont.toMap(ownerId: AuthenticationProvider.helper.user.numero));
     cont.id = res;

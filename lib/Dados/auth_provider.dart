@@ -21,6 +21,7 @@ class AuthenticationProvider {
   }
 
   Future<String> Login({required String email, required String senha}) async {
+    ChatProvider.helper.cleanCachedChats();
     String resMessage="";
     try {
       UserCredential a = await FirebaseAuth.instance
@@ -73,6 +74,7 @@ class AuthenticationProvider {
   }
 
   Future<String> SignIn({required String email,required String nome,required String senha}) async {
+    ChatProvider.helper.cleanCachedChats();
     String resMessage = "";
     try {
 

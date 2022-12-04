@@ -16,16 +16,7 @@ import 'package:bloc/bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyAjBwEi8NxghGQ6Nt6enL5FUhMQaMlpXZU",
-  authDomain: "unitalk-a0fa6.firebaseapp.com",
-  databaseURL: "https://unitalk-a0fa6-default-rtdb.firebaseio.com",
-  projectId: "unitalk-a0fa6",
-  storageBucket: "unitalk-a0fa6.appspot.com",
-  messagingSenderId: "195591691837",
-  appId: "1:195591691837:web:7e126a69617c423cb71454"
-      )
-  );
+   );
   runApp(MyApp());
 }
 
