@@ -20,6 +20,11 @@ class ChatProvider {
   List<Conversa> get Conversas {
     return _conversas;
   }
+  void cleanCachedChats()
+  {
+    _conversas = [];
+    notify("received", 0, "0");
+  }
 
   void _addConversaToCached(Conversa conv) {
     for (int i = 0; i < _conversas.length; i++) {
@@ -148,7 +153,7 @@ class ChatProvider {
       //print("enviado?");
     });
 
-    //notify("", 1, conv.id);
+    //notify("received", 1, conv.id);
     return "";
   }
 
@@ -160,20 +165,6 @@ class ChatProvider {
     };
     db.collection("Conversas").doc(conv.id).set(association);
     _addConversaToCached(conv);
-  }
-
-  List<Conversa> conv_test = [];
-  void _addConversaToTest(Conversa conv) {
-    for (int i = 0; i < conv_test.length; i++) {
-      if (conv_test[i].id == conv.id) {
-        conv_test[i] = conv;
-        //print("mensagem adicionada");
-        return;
-      }
-    }
-    //print("conversa adicionada");
-    conv_test.add(conv);
-    //notificar
   }
 
   

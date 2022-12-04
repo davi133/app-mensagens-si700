@@ -103,7 +103,7 @@ class EmptyList extends StatelessWidget {
           height: 20,
         ),
         ElevatedButton(
-          child: const Text("Cadastrar"),
+          child: const Text("Adicionar"),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
               return NewContactScreen(BlocProvider.of<ContactBloc>(context));

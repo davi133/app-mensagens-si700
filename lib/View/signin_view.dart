@@ -120,16 +120,6 @@ class SigninView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        child: const Text("Voltar"),
-                        onPressed: () {
-                          BlocProvider.of<AuthBloc>(context)
-                              .add(StartLoginEvent());
-                        },
-                      ),
-                      Container(
-                        width: 20,
-                      ),
-                      ElevatedButton(
                         child: const Text("Cadastrar"),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -145,6 +135,17 @@ class SigninView extends StatelessWidget {
                           }));*/
                         },
                       ),
+                       Container(
+                        width: 20,
+                      ),
+                      ElevatedButton(
+                        child: const Text("Voltar"),
+                        onPressed: () {
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(StartLoginEvent());
+                        },
+                      ),
+                     
                     ],
                   )
                 ],

@@ -1,3 +1,5 @@
+import 'package:UnitalkV0_2/Dados/chat_provider.dart';
+
 import '../model/session_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -136,8 +138,10 @@ class AuthenticationProvider {
   }
 
   Future<int> Logout() async {
+
     await FirebaseAuth.instance.signOut();
     _user = SessionUser(nome: ".", email: ". ", numero: -1);
+    ChatProvider.helper.cleanCachedChats();
     return 1;
   }
 
