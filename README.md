@@ -1,4 +1,4 @@
-projeto em flutter de aplicativo de mensagens
+Projeto em flutter de aplicativo de mensagens
 
 Setup:
 
